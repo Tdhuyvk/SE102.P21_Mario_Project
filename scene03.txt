@@ -1,0 +1,40 @@
+# list of object assets to load in this scene
+[ASSETS]
+mario.txt
+coin.txt
+cloud.txt
+brick.txt
+pipe.txt
+#
+[OBJECTS]
+# type	x	y	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
+# See OBJECT_TYPE constants in AssetIDs.h
+#define OBJECT_TYPE_MARIO	0
+#define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_GOOMBA	2
+#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_COIN	4
+#define OBJECT_TYPE_PLATFORM	5
+#define OBJECT_TYPE_PIPE	6
+
+#define OBJECT_TYPE_PORTAL	50
+
+# Mario meaning: type(id)	x	y
+# MARIO
+0	120	10
+
+
+
+
+#Platform meaning: type(id)	x(toa do x ban dau)	y(toa do y ban dau)	cell_width	cell_height	length	sprite_begin	sprite_middle	sprite_end
+#Platform
+5 	100	180	16	15	32	51000	52000	53000
+5	140	140	16	15	26	51000	52000	53000
+
+#Pipe
+6	160	170	16	15	2	61000	62000
+
+#Portal 
+50	200	160	216	180	1
+
