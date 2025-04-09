@@ -21,6 +21,8 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 
 ================================================================ */
 
+// init file from 05-SceneManager
+
 #include <windows.h>
 #include <d3d10.h>
 #include <d3dx10.h>
