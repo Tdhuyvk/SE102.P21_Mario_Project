@@ -41,8 +41,11 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Coin.h"
 #include "Platform.h"
 
-//include pipe
+// include pipe
 #include "Pipe.h"
+
+// include koopas
+#include "Koopas.h"
 
 #include "SampleKeyEventHandler.h"
 
