@@ -64,35 +64,35 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 
 
-//void CKoopas::Render()
-//{
-//	int aniId = ID_ANI_KOOPAS_WALKING;
-//	if (state == KOOPAS_STATE_DIE)
-//	{
-//		aniId = ID_ANI_KOOPAS_DIE;
-//	}
-//
-//	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-//
-//	RenderBoundingBox();
-//}
-
 void CKoopas::Render()
 {
-	int aniId = (state == KOOPAS_STATE_DIE) ? ID_ANI_KOOPAS_DIE : ID_ANI_KOOPAS_WALKING;
-
-	CAnimation* ani = CAnimations::GetInstance()->Get(aniId);
-
-	// Check animation
-	if (!ani) {
-		DebugOut(L"Animation for Koopas with id %d not found!\n", aniId);
-		return;
+	int aniId = ID_ANI_KOOPAS_WALKING;
+	if (state == KOOPAS_STATE_DIE)
+	{
+		aniId = ID_ANI_KOOPAS_DIE;
 	}
 
-	// Render animation
-	ani->Render(x, y);
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+
 	RenderBoundingBox();
 }
+
+//void CKoopas::Render()
+//{
+//	int aniId = (state == KOOPAS_STATE_DIE) ? ID_ANI_KOOPAS_DIE : ID_ANI_KOOPAS_WALKING;
+//
+//	CAnimation* ani = CAnimations::GetInstance()->Get(aniId);
+//
+//	// Check animation
+//	if (!ani) {
+//		DebugOut(L"Animation for Koopas with id %d not found!\n", aniId);
+//		return;
+//	}
+//
+//	// Render animation
+//	ani->Render(x, y);
+//	RenderBoundingBox();
+//}
 
 void CKoopas::SetState(int state)
 {
