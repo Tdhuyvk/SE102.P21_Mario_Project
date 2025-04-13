@@ -102,7 +102,7 @@ int GetBlockSpriteId(BlockColor color, int section, int pos)
 void CBlock::Render()
 {
     float startX = x - (columns * cellWidth) / 2;
-    float startY = y - (rows * cellHeight) / 2;
+    float startY = y - cellHeight / 2;
 
     CSprites* sprites = CSprites::GetInstance();
 
