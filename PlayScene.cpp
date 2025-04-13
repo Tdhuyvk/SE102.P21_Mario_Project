@@ -16,6 +16,9 @@
 // include Koopas.h
 #include "Koopas.h"
 
+// include Block.h
+#include "Block.h"
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -166,6 +169,24 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			cell_width, cell_height, height,
 			sprite_top, sprite_bottom
 		);
+		break;
+	}
+
+	case OBJECT_TYPE_BLOCK:
+	{
+		// Format: object_type x y r b scene_id
+		if (tokens.size() < 8)
+		{
+			DebugOut(L"[ERROR] Pipe object format invalid!\n");
+			return;
+		}
+
+		int columns = atoi(tokens[3].c_str());
+		int rows = atoi(tokens[4].c_str());
+		float cell_width = (float)atof(tokens[5].c_str());
+		float cell_height = (float)atof(tokens[6].c_str());
+		int blockColorId = atoi(tokens[7].c_str());
+		obj = new CBlock(x, y, columns, rows, cell_width, cell_height, (BlockColor)blockColorId);
 		break;
 	}
 
