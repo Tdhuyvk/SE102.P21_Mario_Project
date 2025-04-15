@@ -101,16 +101,19 @@ int GetBlockSpriteId(BlockColor color, int section, int pos)
 
 void CBlock::Render()
 {
-    float startX = x - (columns * cellWidth) / 2;
-    float startY = y - cellHeight / 2;
+    float l, t, r, b;
+    GetBoundingBox(l, t, r, b);
+
+    float width = r - l;
+    float height = b - t;
+    float centerX = l + width / 2 + 8;
+    float centerY = t + height / 2 + 8;
 
     CSprites* sprites = CSprites::GetInstance();
 
     for (int row = 0; row < rows; row++)
     {
         int section;
-        // section = 1 -> head, 
-        // >=2 head, body, foot
         if (rows == 1)
             section = 0;
         else if (row == 0)
@@ -123,8 +126,6 @@ void CBlock::Render()
         for (int col = 0; col < columns; col++)
         {
             int pos;
-            // row:
-            // 1 row -> use mid, else left, right, mid.
             if (columns == 1)
                 pos = 1;
             else if (col == 0)
@@ -137,9 +138,11 @@ void CBlock::Render()
             int spriteId = GetBlockSpriteId(color, section, pos);
             if (spriteId != 0)
             {
-                // draw current
-                float drawX = startX + col * cellWidth;
-                float drawY = startY + row * cellHeight;
+                float blockLeft = centerX - (width / 2.0f);
+                float blockTop = centerY - (height / 2.0f);
+
+                float drawX = blockLeft + col * cellWidth;
+                float drawY = blockTop + row * cellHeight;
                 sprites->Get(spriteId)->Draw(drawX, drawY);
             }
         }
@@ -148,35 +151,22 @@ void CBlock::Render()
     RenderBoundingBox();
 }
 
+
+//void CBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
+//{
+//    l = x - (columns * cellWidth) / 2;
+//    t = y - cellHeight / 2;
+//    r = l + columns * cellWidth;
+//    b = t + rows * cellHeight;
+//}
+
 void CBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
     l = x - (columns * cellWidth) / 2;
-    t = y - (rows * cellHeight) / 2;
+    t = y - cellHeight / 2;
     r = l + columns * cellWidth;
     b = t + rows * cellHeight;
 }
-
-//void CBlock::RenderBoundingBox()
-//{
-//    D3DXVECTOR3 p(x, y, 0);
-//    RECT rect;
-//
-//    LPTEXTURE bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
-//
-//    float l, t, r, b;
-//    GetBoundingBox(l, t, r, b);
-//    rect.left = 0;
-//    rect.top = 0;
-//    rect.right = (int)(r - l);
-//    rect.bottom = (int)(b - t);
-//
-//    float cx, cy;
-//    CGame::GetInstance()->GetCamPos(cx, cy);
-//
-//    float xx = l + rect.right / 2;
-//
-//    CGame::GetInstance()->Draw(xx - cx, t - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
-//}
 
 void CBlock::RenderBoundingBox()
 {
@@ -193,8 +183,12 @@ void CBlock::RenderBoundingBox()
     float cx, cy;
     CGame::GetInstance()->GetCamPos(cx, cy);
 
+    float xx = l + rect.right / 2;     // Center to X
+    float yy = t + rect.bottom / 2;    // Center to Y
+
+
     // draw bounding box at (l, t) offset to camera
-    CGame::GetInstance()->Draw(l - cx, t - cy,
+    CGame::GetInstance()->Draw(xx - cx, yy - cy,
         CTextures::GetInstance()->Get(ID_TEX_BBOX),
         nullptr, BBOX_ALPHA, rect.right, rect.bottom);
 }
