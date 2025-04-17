@@ -16,8 +16,8 @@
 // include Koopas.h
 #include "Koopas.h"
 
-// include Block.h
-#include "Block.h"
+// include Box.h
+#include "Box.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -172,7 +172,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
-	case OBJECT_TYPE_BLOCK:
+	case OBJECT_TYPE_BOX:
 	{
 		// Format: object_type x y r b scene_id
 		if (tokens.size() < 8)
@@ -185,8 +185,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int rows = atoi(tokens[4].c_str());
 		float cell_width = (float)atof(tokens[5].c_str());
 		float cell_height = (float)atof(tokens[6].c_str());
-		int blockColorId = atoi(tokens[7].c_str());
-		obj = new CBlock(x, y, columns, rows, cell_width, cell_height, (BlockColor)blockColorId);
+		int boxColorId = atoi(tokens[7].c_str());
+		obj = new CBox(x, y, columns, rows, cell_width, cell_height, (BoxColor)boxColorId);
 		break;
 	}
 

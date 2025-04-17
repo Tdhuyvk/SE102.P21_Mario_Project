@@ -1,25 +1,25 @@
 #pragma once
 #include "GameObject.h"
 
-// Block color
-enum BlockColor {
-    BLOCK_WHITE,
-    BLOCK_GREEN,
-    BLOCK_PINK,
-    BLOCK_BLUE
+// Box color
+enum BoxColor {
+    BOX_WHITE,
+    BOX_GREEN,
+    BOX_PINK,
+    BOX_BLUE
 };
 
-class CBlock : public CGameObject
+class CBox : public CGameObject
 {
 protected:
     int columns;        // cell
     int rows;           // cell
     float cellWidth;    // pixel or game unit
     float cellHeight;   
-    BlockColor color;   // block color (asset IDs)
+    BoxColor color;   // box color (asset IDs)
 
 public:
-    CBlock(float x, float y, int columns, int rows, float cellWidth, float cellHeight, BlockColor color)
+    CBox(float x, float y, int columns, int rows, float cellWidth, float cellHeight, BoxColor color)
         : CGameObject(x, y)
     {
         this->columns = columns;
@@ -30,9 +30,9 @@ public:
     }
 
     void Render();
-    void Update(DWORD dt) {} // don't update block state
+    void Update(DWORD dt) {} // don't update box state
     void GetBoundingBox(float& l, float& t, float& r, float& b);
     void RenderBoundingBox();
 };
 
-typedef CBlock* LPBLOCK;
+typedef CBox* LPBOX;

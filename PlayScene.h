@@ -11,6 +11,8 @@
 // include Pipe.h
 #include "Pipe.h"
 
+// include Box.h
+#include "Box.h"
 
 class CPlayScene: public CScene
 {
