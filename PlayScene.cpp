@@ -193,7 +193,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
-	case OBJECT_TYPE_GROUND:
+	/*case OBJECT_TYPE_GROUND:
 	{
 
 		float cell_width = (float)atof(tokens[3].c_str());
@@ -208,6 +208,24 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			cell_width, cell_height, length,
 			sprite_begin, sprite_middle, sprite_end
 		);
+
+		break;
+	}*/
+
+	case OBJECT_TYPE_GROUND:
+	{
+		// Format: object_type x y r b scene_id
+		if (tokens.size() < 7)
+		{
+			DebugOut(L"[ERROR] Pipe object format invalid!\n");
+			return;
+		}
+
+		int columns = atoi(tokens[3].c_str());
+		int rows = atoi(tokens[4].c_str());
+		float cellWidth = (float)atof(tokens[5].c_str());
+		float cellHeight = (float)atof(tokens[6].c_str());
+		obj = new CGround(x, y, columns, rows, cellWidth, cellHeight);
 
 		break;
 	}

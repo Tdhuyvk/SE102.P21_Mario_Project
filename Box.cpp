@@ -151,15 +151,6 @@ void CBox::Render()
     RenderBoundingBox();
 }
 
-
-//void CBlock::GetBoundingBox(float& l, float& t, float& r, float& b)
-//{
-//    l = x - (columns * cellWidth) / 2;
-//    t = y - cellHeight / 2;
-//    r = l + columns * cellWidth;
-//    b = t + rows * cellHeight;
-//}
-
 void CBox::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
     l = x - (columns * cellWidth) / 2;
