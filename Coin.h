@@ -6,8 +6,8 @@
 
 #define ID_ANI_COIN 11000
 
-#define	COIN_WIDTH 10
-#define COIN_BBOX_WIDTH 10
+#define	COIN_WIDTH 16
+#define COIN_BBOX_WIDTH 16
 #define COIN_BBOX_HEIGHT 16
 
 class CCoin : public CGameObject {
