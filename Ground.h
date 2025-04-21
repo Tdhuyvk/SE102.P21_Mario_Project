@@ -2,6 +2,10 @@
 
 #include "GameObject.h"
 
+// 
+// The most used type of object in Mario! 
+//
+
 class CGround : public CGameObject
 {
 protected:
