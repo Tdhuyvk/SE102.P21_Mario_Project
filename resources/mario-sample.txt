@@ -2,8 +2,8 @@
 start	6
 #width	320
 #height	240
-width	272
-height	256
+width	1366
+height	768
 
 #id	type	file
 # type: 0: intro, 1: play scene 

@@ -28,7 +28,8 @@ int GetBoxSpriteId(int section, int pos)
 void CGround::Render() {
 
     float l = x + cellWidth / 2;
-    float t = y + cellHeight / 2 - rows * cellHeight;
+    /*float t = y + cellHeight / 2 - rows * cellHeight;*/
+    float t = y + cellHeight / 2;
 
     CSprites* sprites = CSprites::GetInstance();
     for (int row = 0; row < rows; ++row) {
@@ -48,10 +49,15 @@ void CGround::Render() {
 }
 
 void CGround::GetBoundingBox(float& l, float& t, float& r, float& b) {
-    l = x;
+    /*l = x;
     t = y - rows * cellHeight;
     r = x + columns * cellWidth;
-    b = y;
+    b = y;*/
+
+    l = x;
+    t = y;
+    r = x + columns * cellWidth;
+    b = y + rows * cellHeight;
 }
 
 void CGround::RenderBoundingBox()
