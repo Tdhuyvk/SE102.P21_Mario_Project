@@ -26,11 +26,9 @@ int GetBoxSpriteId(int section, int pos)
 }
 
 void CGround::Render() {
-    /*float l, t, r, b;
-    GetBoundingBox(l, t, r, b);*/
 
     float l = x + cellWidth / 2;
-    float t = y + cellHeight / 2;
+    float t = y + cellHeight / 2 - rows * cellHeight;
 
     CSprites* sprites = CSprites::GetInstance();
     for (int row = 0; row < rows; ++row) {
@@ -51,9 +49,9 @@ void CGround::Render() {
 
 void CGround::GetBoundingBox(float& l, float& t, float& r, float& b) {
     l = x;
-    t = y;
+    t = y - rows * cellHeight;
     r = x + columns * cellWidth;
-    b = y + rows * cellHeight;
+    b = y;
 }
 
 void CGround::RenderBoundingBox()
@@ -69,29 +67,13 @@ void CGround::RenderBoundingBox()
     rect.right = (int)(r - l);
     rect.bottom = (int)(b - t);
 
-    // center bounding?box
+    // center bounding box
     float xx = (l + r) / 2;
     float yy = (t + b) / 2;
-
-    /*long width = (long)(r - l);
-    long height = (long)(b - t);
-
-    float drawX = l + width * 0.5f - cellWidth * 0.5f;
-    float drawY = t + height * 0.5f - cellHeight * 0.5f;*/
 
     // get camera
     float cx, cy;
     CGame::GetInstance()->GetCamPos(cx, cy);
-
-    /*float xx = l + rect.right / 2;
-    float yy = t + rect.bottom / 2;*/
-
-    /*float xx = l + rect.right / 2 - 8;
-    float yy = t + rect.bottom / 2 - 8;*/
-
-   /* CGame::GetInstance()->Draw(xx - cx, yy - cy,
-        CTextures::GetInstance()->Get(ID_TEX_BBOX),
-        nullptr, BBOX_ALPHA, rect.right, rect.bottom);*/
 
     // draw bounding box with (centerX, centerY)
     CGame::GetInstance()->Draw(xx - cx, yy - cy,
