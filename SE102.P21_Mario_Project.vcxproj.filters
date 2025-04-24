@@ -170,5 +170,8 @@
     <ClInclude Include="Ground.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlatformChecker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
