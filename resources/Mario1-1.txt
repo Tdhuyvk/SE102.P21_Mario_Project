@@ -8,22 +8,22 @@ resources\cloud.txt
 resources\koopas.txt
 resources\box.txt
 resources\ground.txt
+#resources\pipe.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Block, 8 = Ground
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
 0	20	100
 
 # BRICKS
-1	0	128
-
+#1	0	0
 
 
 #COIN
-4	0	0
+#4	0	0
 
 
 #Goomba
@@ -40,6 +40,9 @@ resources\ground.txt
 
 #Platform
 #5	90	136	16	15	16	51000	52000	53000
+
+#Pipe
+#6	16	128	16	16	2	61000	62000	
 
 # add 8 first
 #Ground
