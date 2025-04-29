@@ -33,6 +33,8 @@ public:
     void Update(DWORD dt) {} // don't update box state
     void GetBoundingBox(float& l, float& t, float& r, float& b);
     void RenderBoundingBox();
+
+    int IsDirectionColliable(float nx, float ny);
 };
 
 typedef CBox* LPBOX;

@@ -220,3 +220,9 @@ void CBox::RenderBoundingBox()
         CTextures::GetInstance()->Get(ID_TEX_BBOX),
         nullptr, BBOX_ALPHA, rect.right, rect.bottom);
 }
+
+int CBox::IsDirectionColliable(float nx, float ny)
+{
+    if (nx == 0 && ny == -1) return 1;
+    else return 0;
+}

@@ -16,7 +16,7 @@ resources\ground.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	20	100
+#0	20	100
 
 # BRICKS
 #1	0	0
@@ -33,10 +33,13 @@ resources\ground.txt
 #3	350	10
 
 #Box	0 white	1 green	2 pink	3 blue 
+7	272	96	3	5	16	16	3
 7	240	128	3	3	16	16	2
-#7	128	124	3	3	16	16	3
 
-#7	0	128	5	4	16	16	1
+7	512	64	4	7	16	16	0
+7	464	96	4	5	16	16	2
+7	400	128	5	3	16	16	1
+7	512	144	6	2	16	16	1
 
 #Platform
 #5	90	136	16	15	16	51000	52000	53000
@@ -55,5 +58,8 @@ resources\ground.txt
 
 #Portal 
 #50	300	110	316	140	2
+
+# MARIO
+0	20	100
 
 
