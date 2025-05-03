@@ -17,6 +17,9 @@
 #define ID_ANI_KOOPAS_WALKING 6000
 #define ID_ANI_KOOPAS_DIE 6001
 
+#define ID_ANI_KOOPAS_WALKING_LEFT 6002
+#define ID_ANI_KOOPAS_WALKING_RIGHT 6003
+
 class CKoopas : public CGameObject
 {
 protected:

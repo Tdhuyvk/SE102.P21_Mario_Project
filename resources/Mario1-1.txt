@@ -15,24 +15,26 @@ resources\ground.txt
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground
 # See OBJECT_TYPE constants in AssetIDs.h
 
-# MARIO
-#0	20	100
 
 # BRICKS
 #1	0	0
 
 
 #COIN
-#4	0	0
-
+4	1056	80
+4	1088	48
+4	1120	16
+4	1152	-16
+4	1184	-48
 
 #Goomba
 #2	300	10
 
 #Koopas
-#3	350	10
+3	350	10
 
 #Box	0 white	1 green	2 pink	3 blue 
+7	272	96	3	5	16	16	3
 7	272	96	3	5	16	16	3
 7	240	128	3	3	16	16	2
 

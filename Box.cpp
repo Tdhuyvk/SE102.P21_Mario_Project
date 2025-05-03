@@ -156,7 +156,7 @@ void CBox::Render()
         }
     }
 
-    RenderBoundingBox();
+    //RenderBoundingBox();
 }
 
 void CBox::GetBoundingBox(float& l, float& t, float& r, float& b)
