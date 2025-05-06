@@ -23,4 +23,7 @@ public:
     void GetBoundingBox(float& l, float& t, float& r, float& b) override;
 
     void RenderBoundingBox();
+
+    // Always non-collidable
+    int IsDirectionColliable(float nx, float ny) override { return 0; }
 };

@@ -2,12 +2,6 @@
 #include "Textures.h"
 #include "Game.h"
 
-//void CBush::Render()
-//{
-//    CSprites::GetInstance()->Get(spriteId)->Draw(x, y);
-//    RenderBoundingBox();
-//}
-
 void CBush::Render()
 {
     CAnimations* animations = CAnimations::GetInstance();
