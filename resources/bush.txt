@@ -1,0 +1,16 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#small bush
+101000	52	51	67	66	30
+
+# big bush
+102100	271	0	286	15	30
+102200	288	0	303	15	30
+102300	271	17	286	32	30
+102400	288	17	303	32	30
+102500	271	34	286	49	30
+102600	288	34	303	49	30
+102700	271	51	286	66	30
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]

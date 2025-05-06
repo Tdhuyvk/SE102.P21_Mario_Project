@@ -22,6 +22,9 @@
 // include Ground.h
 #include "Ground.h"
 
+// include Bush.h
+#include "Bush.h"
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -208,6 +211,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float cellHeight = (float)atof(tokens[6].c_str());
 		obj = new CGround(x, y, columns, rows, cellWidth, cellHeight);
 
+		break;
+	}
+
+	case OBJECT_TYPE_BUSH:
+	{
+		// Format: object_type x y sprite_id
+		if (tokens.size() < 4)
+		{
+			DebugOut(L"[ERROR] Bush object format invalid!\n");
+			return;
+		}
+		int spriteId = atoi(tokens[3].c_str());
+		obj = new CBush(x, y, spriteId);
 		break;
 	}
 

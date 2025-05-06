@@ -6,13 +6,16 @@
 #include "Brick.h"
 #include "Mario.h"
 #include "Goomba.h"
-//#include "Koopas.h"
+#include "Koopas.h"
 
 // include Pipe.h
 #include "Pipe.h"
 
 // include Box.h
 #include "Box.h"
+
+// include Bush.h
+#include "Bush.h"
 
 class CPlayScene: public CScene
 {
