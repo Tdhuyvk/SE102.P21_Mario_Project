@@ -25,6 +25,10 @@
 // include Bush.h
 #include "Bush.h"
 
+// include Cloud.h
+#include "Cloud.h"
+
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -224,6 +228,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		int spriteId = atoi(tokens[3].c_str());
 		obj = new CBush(x, y, spriteId);
+		break;
+	}
+
+	case OBJECT_TYPE_CLOUD_CUTE:
+	{
+		// Format: object_type x y sprite_id
+		if (tokens.size() < 4)
+		{
+			DebugOut(L"[ERROR] Cloud object format invalid!\n");
+			return;
+		}
+		int lenght = atoi(tokens[3].c_str());
+		obj = new CCloud(x, y, lenght);
 		break;
 	}
 

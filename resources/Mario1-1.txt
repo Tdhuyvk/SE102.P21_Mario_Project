@@ -10,11 +10,12 @@ resources\box.txt
 resources\ground.txt
 #resources\pipe.txt
 resources\bush.txt
+resources\cloudcute.txt
 
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute
 # See OBJECT_TYPE constants in AssetIDs.h
 
 
@@ -154,6 +155,8 @@ resources\bush.txt
 9	992	128	102200
 9	992	144	102400
 
+#CloudCute
+10	0	160	2
 
 #Portal 
 #50	300	110	316	140	2
