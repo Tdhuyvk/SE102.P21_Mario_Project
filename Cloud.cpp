@@ -25,8 +25,8 @@ static int GetCloudSpriteId(int section, int pos) {
 
 void CCloud::Render() {
 
-    float baseX = x + CLOUD_SPRITE_WIDTH;
-    float baseY = y + CLOUD_SPRITE_HEIGHT / 2;
+    float offsetX = CLOUD_SPRITE_WIDTH / 2;
+    float offsetY = CLOUD_SPRITE_HEIGHT / 2;
 
     CSprites* sprites = CSprites::GetInstance();
 
@@ -43,8 +43,8 @@ void CCloud::Render() {
             if (int spriteId = GetCloudSpriteId(section, pos)) {
                 sprites->Get(spriteId)
                     ->Draw(
-                        baseX + (col - 1) * CLOUD_SPRITE_WIDTH,
-                        baseY + row * CLOUD_SPRITE_HEIGHT
+                        x + col * CLOUD_SPRITE_WIDTH + offsetX,
+                        y + row * CLOUD_SPRITE_HEIGHT + offsetY
                     );
             }
         }
@@ -56,8 +56,8 @@ void CCloud::Render() {
 void CCloud::GetBoundingBox(float& l, float& t, float& r, float& b) {
     l = x;
     t = y;
-    r = x + CLOUD_SPRITE_WIDTH * (length + 1);
-    b = y + CLOUD_SPRITE_HEIGHT * 2;
+    r = x + (length + 2) * CLOUD_SPRITE_WIDTH;
+    b = y + 2 * CLOUD_SPRITE_HEIGHT;
 }
 
 void CCloud::RenderBoundingBox() {
