@@ -164,6 +164,7 @@
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="BouncingCoin.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bush.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopas.h" />
+    <ClInclude Include="LifeUpMushRoom.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Platform.h" />
@@ -188,6 +190,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="SuperLeaf.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
