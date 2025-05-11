@@ -146,6 +146,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Koopas.cpp" />
+    <ClCompile Include="LifeUpMushRoom.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Pipe.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="SuperLeaf.h" />
+    <ClInclude Include="SuperMushRoom.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
