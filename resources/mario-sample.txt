@@ -22,4 +22,4 @@ height	768
 10	textures\enemies.png
 20	textures\misc.png
 30	textures\map1-1.png
-40	textures\output-onlinepngtools.png
+40	textures\misc_1.png
