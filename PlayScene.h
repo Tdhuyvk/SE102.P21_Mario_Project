@@ -17,6 +17,9 @@
 // include Bush.h
 #include "Bush.h"
 
+// include Block.h
+#include "Block.h"
+
 class CPlayScene: public CScene
 {
 protected: 
@@ -47,6 +50,9 @@ public:
 	void PurgeDeletedObjects();
 
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
+
+	// add object
+	void AddObject(LPGAMEOBJECT obj) { objects.push_back(obj); }
 };
 
 typedef CPlayScene* LPPLAYSCENE;

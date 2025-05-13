@@ -28,6 +28,9 @@
 // include Cloud.h
 #include "Cloud.h"
 
+// include Block.h
+#include "Block.h"
+
 
 #include "SampleKeyEventHandler.h"
 
@@ -241,6 +244,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		int lenght = atoi(tokens[3].c_str());
 		obj = new CCloud(x, y, lenght);
+		break;
+	}
+
+	case OBJECT_TYPE_BLOCK:
+	{
+		// Format: object_type x y
+		if (tokens.size() < 3)
+		{
+			DebugOut(L"[ERROR] Block object format invalid!\n");
+			return;
+		}
+		obj = new CBlock(x, y);
 		break;
 	}
 
