@@ -6,6 +6,9 @@
 
 #include "debug.h"
 
+// include Koopa
+#include "Koopas.h"
+
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
 
@@ -32,6 +35,10 @@
 
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
+
+// define hold
+#define MARIO_STATE_HOLD			700
+#define MARIO_STATE_RELEASE_HOLD	701
 
 
 #pragma region ANIMATION_ID
@@ -114,9 +121,16 @@ class CMario : public CGameObject
 	BOOLEAN isOnPlatform;
 	int coin; 
 
+	// shell hold
+	BOOLEAN isHolding;
+	CKoopas* heldKoopas;
+
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
+
+	// collision with Koopas
+	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -134,6 +148,10 @@ public:
 		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
+
+		// hold shell
+		isHolding = false;
+		heldKoopas = NULL;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -153,4 +171,8 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	void HoldKoopas(CKoopas* koopas);
+	void ReleaseKoopas();
+	bool IsHolding() { return isHolding; }
 };
