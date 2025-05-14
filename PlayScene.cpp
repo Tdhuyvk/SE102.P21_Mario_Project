@@ -141,7 +141,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
+	/*case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;*/
+	case OBJECT_TYPE_KOOPAS:
+	{
+		if (tokens.size() < 3)
+		{
+			DebugOut(L"[ERROR] Koopas object format invalid!\n");
+			return;
+		}
+		
+		int type = KOOPAS_TYPE_GREEN;
+		if (tokens.size() > 3)
+			type = atoi(tokens[3].c_str());
+		obj = new CKoopas(x, y, type);
+		break;
+	}
 
 	case OBJECT_TYPE_PLATFORM:
 	{
