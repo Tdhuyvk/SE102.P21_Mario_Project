@@ -1,17 +1,48 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
-#WALK
+#WALK GREEN KOOPA
 71001	6	130	21	155	10
 71002	28	130	43	155	10
 
+#WALK RED KOOPA
 71003	916	130	931	155	10
 71004	938	130	954	155	10
 
-#DIE
+#SHELL GREEN KOOPA (stationary and held)
 72001	50	139	65	155	10
+
+#SHELL RED KOOPA (stationary and held)
+72002	950	139	965	155	10
+
+#SHELL MOVING GREEN KOOPA
+73001	50	139	65	155	10
+
+#SHELL MOVING RED KOOPA
+73002	950	139	965	155	10
+
+#REVIVING GREEN KOOPA
+74001	78	148	93	155	10
+74002	78	139	93	155	10
+
+#REVIVING RED KOOPA
+74003	978	148	993	155	10
+74004	978	139	993	155	10
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
-6002	71001	100	71002	100
+# Green Koopa
+6002	71001	100	71002	100       # Walking left
+6003	71001	100	71002	100       # Walking right
+6004	72001	100                   # Shell stationary
+6005	72001	50                    # Shell moving
+6006	74001	200	74002	200       # Reviving
+
+# Red Koopa
+6102	71003	100	71004	100       # Walking left
+6103	71003	100	71004	100       # Walking right  
+6104	72002	100                   # Shell stationary
+6105	72002	50                    # Shell moving
+6106	74003	200	74004	200       # Reviving
+
+# Legacy animations
 6001	72001	100
-6003	71003	100	71004	100
