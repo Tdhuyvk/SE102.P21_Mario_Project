@@ -60,18 +60,42 @@ protected:
 	float ay;
 
 	ULONGLONG die_start;
+	ULONGLONG shell_start;
+	ULONGLONG revive_start;
+	ULONGLONG hold_start;
+
+	int type;
+	bool isBeingHeld;
+	CMario* holdingMario;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return state != KOOPAS_STATE_BEING_HELD; } // check state
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
+	// collision with others
+	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
+	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithBlock(LPCOLLISIONEVENT e);
+	void OnCollisionWithPlatform(LPCOLLISIONEVENT e);
+	
+	void HandleRedKoopaTurnaround();
+
 public:
-	CKoopas(float x, float y);
+	CKoopas(float x, float y, int type = KOOPAS_TYPE_GREEN);
 	virtual void SetState(int state);
+
+	bool IsInShell() { return (state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_SHELL_MOVING); }
+	bool IsBeingHeld() { return isBeingHeld; }
+	void SetBeingHeld(bool held) { isBeingHeld = held; }
+	void SetHoldingMario(CMario* mario) { holdingMario = mario; }
+	void Release();
+	int getKoopasType() { return type; }
+	float GetVy() { return vy; }
 };
