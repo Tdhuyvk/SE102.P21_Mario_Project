@@ -43,3 +43,14 @@ void CBrick::RenderBoundingBox()
         CTextures::GetInstance()->Get(ID_TEX_BBOX),
         nullptr, BBOX_ALPHA, rect.right, rect.bottom);
 }
+
+void CBrick::SetState(int state) {
+    CGameObject::SetState(state);
+
+    switch (state) {
+    case BRICK_STATE_BROKEN:
+        // delete when broken
+        isDeleted = true;
+        break;
+    }
+}

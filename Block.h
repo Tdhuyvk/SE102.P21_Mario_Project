@@ -15,7 +15,8 @@ private:
 public:
     CBlock(float x, float y) : CGameObject(x, y) { used = false; }
     void Render();
-    void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = nullptr) { }
+    void RenderBoundingBox();
+    void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = nullptr);
     void GetBoundingBox(float& l, float& t, float& r, float& b);
     void OnCollisionWith(LPCOLLISIONEVENT e);
 };
