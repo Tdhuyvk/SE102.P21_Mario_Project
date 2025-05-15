@@ -22,7 +22,7 @@ resources\block.txt
 
 # BRICKS
 #1	0	0
-
+1	224	160
 
 #COIN
 4	1072	80

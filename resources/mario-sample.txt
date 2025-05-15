@@ -23,3 +23,4 @@ height	768
 20	textures\misc.png
 30	textures\map1-1.png
 40	textures\misc_1.png
+50	textures\enimies-1.png
