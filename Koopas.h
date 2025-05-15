@@ -33,11 +33,11 @@ class CMario;
 #define KOOPAS_STATE_BEING_HELD 500
 
 // define Koopas type
-#define KOOPAS_TYPE_GREEN 1
-#define KOOPAS_TYPE_RED 2
+#define KOOPAS_TYPE_RED 1
+#define KOOPAS_TYPE_GREEN 2
 
 // Animation IDs
-// Koopas
+// Koopas red
 #define ID_ANI_KOOPAS_WALKING 6000
 #define ID_ANI_KOOPAS_DIE 6001
 
@@ -47,7 +47,7 @@ class CMario;
 #define ID_ANI_KOOPAS_SHELL_MOVING 6005
 #define ID_ANI_KOOPAS_REVIVING 6006
 
-// red Koopa
+// Koopa green
 #define ID_ANI_RED_KOOPAS_WALKING 6100
 #define ID_ANI_RED_KOOPAS_WALKING_LEFT 6102
 #define ID_ANI_RED_KOOPAS_WALKING_RIGHT 6103
@@ -90,7 +90,7 @@ protected:
 	void HandleRedKoopaTurnaround();
 
 public:
-	CKoopas(float x, float y, int type = KOOPAS_TYPE_GREEN);
+	CKoopas(float x, float y, int type = KOOPAS_TYPE_RED);
 	virtual void SetState(int state);
 
 	bool IsInShell() { return (state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_SHELL_MOVING); }

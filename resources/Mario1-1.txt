@@ -31,9 +31,6 @@ resources\block.txt
 4	1168	-16
 4	1200	-48
 
-#Goomba
-#2	300	10
-
 #Box	0 white	1 green	2 pink	3 blue 
 7	272	96	3	5	16	16	3
 7	272	96	3	5	16	16	3
@@ -236,8 +233,11 @@ resources\block.txt
 # MARIO
 0	20	120
 
+#Goomba
+2	400	100
+
 #Koopas
 #3	350	100
-3	300	150
+3	200	150	1
 
 

@@ -21,5 +21,7 @@ public:
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void RenderBoundingBox();
 
+	virtual int IsCollidable() override { return 1; }
+	virtual int IsBlocking() override { return 1; }
 	virtual void SetState(int state);
 };

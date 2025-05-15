@@ -1,48 +1,58 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
-#WALK GREEN KOOPA
-71001	6	130	21	155	10
-71002	28	130	43	155	10
+#WALK RED KOOPAS
+#LEFT
+71111	28	67	43	92	50
+71112	47	66	62	92	50
 
-#WALK RED KOOPA
-71003	916	130	931	155	10
-71004	938	130	954	155	10
+#RIGHT
+71121	604	67	619	155	50
+71122	585	66	600	92	50
 
-#SHELL GREEN KOOPA (stationary and held)
-72001	50	139	65	155	10
+#SHELL (stationary and held)
+71201	20	97	44	112	50
 
-#SHELL RED KOOPA (stationary and held)
-72002	950	139	965	155	10
+#SHELL MOVING
+71211	50	96	65	111	50
+71212	71	96	86	111	50
 
-#SHELL MOVING GREEN KOOPA
-73001	50	139	65	155	10
+#REVIVING
+71301	71	75	88	90	50
 
-#SHELL MOVING RED KOOPA
-73002	950	139	965	155	10
+#WALK GREEN KOOPAS
+#LEFT
+72111	31	119	46	144	50
+72112	50	118	65	144	50
 
-#REVIVING GREEN KOOPA
-74001	78	148	93	155	10
-74002	78	139	93	155	10
+#RIGHT
+72121	601	119	616	144	50
+72122	582	119	597	144	50
 
-#REVIVING RED KOOPA
-74003	978	148	993	155	10
-74004	978	139	993	155	10
+#SHELL (stationary and held)
+72201	32	149	47	164	50
+
+#SHELL MOVING
+72211	53	148	68	163	50
+72212	74	148	89	163	50
+
+#REVIVING
+72301	74	127	91	142	50
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
-# Green Koopa
-6002	71001	100	71002	100       # Walking left
-6003	71001	100	71002	100       # Walking right
-6004	72001	100                   # Shell stationary
-6005	72001	50                    # Shell moving
-6006	74001	200	74002	200       # Reviving
+#Red Koopas
+6002	71111	100	71112	100             #Walking left
+6003	71121	100	71122	100             #Walking right
+6004	71201	100             #Shell stationary
+6005	71211	50	71212	50             #Shell moving
+6006	71301	200             #Reviving
 
-# Red Koopa
-6102	71003	100	71004	100       # Walking left
-6103	71003	100	71004	100       # Walking right  
-6104	72002	100                   # Shell stationary
-6105	72002	50                    # Shell moving
-6106	74003	200	74004	200       # Reviving
+#Green Koopas
+6102	72111	100	72112	100             #Walking left
+6103	72121	100	72122	100             #Walking right
+6104	72201	100             #Shell stationary
+6105	72211	50	72212	50             #Shell moving
+6106	72301	200             #Reviving
 
 # Legacy animations
-6001	72001	100
+6001	71201	100

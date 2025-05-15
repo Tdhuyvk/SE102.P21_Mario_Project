@@ -8,7 +8,7 @@
 #include "PlayScene.h"
 #include "Game.h"
 
-CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y)
+CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y), type(type)
 {
 	this->ax = 0;
 	this->ay = KOOPAS_GRAVITY;

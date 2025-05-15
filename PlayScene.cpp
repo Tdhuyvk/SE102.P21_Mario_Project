@@ -144,16 +144,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	/*case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;*/
 	case OBJECT_TYPE_KOOPAS:
 	{
-		if (tokens.size() < 3)
+		if (tokens.size() < 4)
 		{
 			DebugOut(L"[ERROR] Koopas object format invalid!\n");
 			return;
 		}
 		
-		int type = KOOPAS_TYPE_GREEN;
-		if (tokens.size() > 3)
-			type = atoi(tokens[3].c_str());
-		obj = new CKoopas(x, y, type);
+		int Koopastype;
+		float x = (float)atof(tokens[1].c_str());
+		float y = (float)atof(tokens[2].c_str());
+		Koopastype = atoi(tokens[3].c_str());
+
+		obj = new CKoopas(x, y, Koopastype);
 		break;
 	}
 
