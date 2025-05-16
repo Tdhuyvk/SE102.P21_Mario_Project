@@ -135,6 +135,9 @@ class CMario : public CGameObject
 	// collision with Koopas
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 
+	// collision with Mushroom
+	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
+
 	int GetAniIdBig();
 	int GetAniIdSmall();
 

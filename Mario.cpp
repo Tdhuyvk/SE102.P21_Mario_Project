@@ -11,6 +11,9 @@
 // include Koopas.h
 #include "Koopas.h"
 
+// include Mushroom.h
+#include "Mushroom.h"
+
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -63,6 +66,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CKoopas*>(e->obj)) // collision with koopas
 		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<CMushroom*>(e->obj)) // collision with mushroom
+		OnCollisionWithMushroom(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -210,6 +215,17 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			}
 		}
 	}
+}
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+
+	if (level < MARIO_LEVEL_BIG) {
+		SetLevel(MARIO_LEVEL_BIG);
+		StartUntouchable();
+	}
+	e->obj->Delete();
+	coin++;
 }
 
 //
