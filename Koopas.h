@@ -24,6 +24,8 @@ class CMario;
 #define KOOPAS_SHELL_TIMEOUT 5000
 #define KOOPAS_REVIVE_TIMEOUT 1000
 #define KOOPAS_BEING_HELD_TIMEOUT 10000
+#define KOOPAS_DIRECTION_CHANGE_COOLDOWN 2000
+#define KOOPAS_EDGE_CHECK_COOLDOWN 2000
 
 // define Koopas state
 #define KOOPAS_STATE_WALKING 100
@@ -41,19 +43,6 @@ class CMario;
 #define ID_ANI_KOOPAS_WALKING 6000
 #define ID_ANI_KOOPAS_DIE 6001
 
-//#define ID_ANI_KOOPAS_WALKING_LEFT 6002
-//#define ID_ANI_KOOPAS_WALKING_RIGHT 6003
-//#define ID_ANI_KOOPAS_SHELL 6004
-//#define ID_ANI_KOOPAS_SHELL_MOVING 6005
-//#define ID_ANI_KOOPAS_REVIVING 6006
-//
-//// Koopa green
-//#define ID_ANI_RED_KOOPAS_WALKING 6100
-//#define ID_ANI_RED_KOOPAS_WALKING_LEFT 6102
-//#define ID_ANI_RED_KOOPAS_WALKING_RIGHT 6103
-//#define ID_ANI_RED_KOOPAS_SHELL 6104
-//#define ID_ANI_RED_KOOPAS_SHELL_MOVING 6105
-//#define ID_ANI_RED_KOOPAS_REVIVING 6106
 
 // koopas red
 #define ID_ANI_KOOPAS_RED_WALKING_LEFT      6002
@@ -80,6 +69,10 @@ protected:
 	ULONGLONG revive_start;
 	ULONGLONG hold_start;
 
+	// 
+	ULONGLONG last_direction_change_time;
+	ULONGLONG last_edge_check_time;
+
 	int type;
 	bool isBeingHeld;
 	CMario* holdingMario;
@@ -100,7 +93,7 @@ protected:
 	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithBlock(LPCOLLISIONEVENT e);
 	void OnCollisionWithPlatform(LPCOLLISIONEVENT e);
-	
+
 	void HandleRedKoopaTurnaround();
 
 public:

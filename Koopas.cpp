@@ -17,6 +17,9 @@ CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y), type(type)
 	shell_start = -1;
 	revive_start = -1;
 	hold_start = -1;
+	// 
+	last_direction_change_time = 0;
+	last_edge_check_time = 0;
 
 	this->type = type;
 	isBeingHeld = false;
@@ -27,21 +30,6 @@ CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y), type(type)
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	/*if (state == KOOPAS_STATE_DIE)
-	{
-		left = x - KOOPAS_BBOX_WIDTH / 2;
-		top = y - KOOPAS_BBOX_HEIGHT_DIE / 2;
-		right = left + KOOPAS_BBOX_WIDTH;
-		bottom = top + KOOPAS_BBOX_HEIGHT_DIE;
-	}
-	else
-	{
-		left = x - KOOPAS_BBOX_WIDTH / 2;
-		top = y - KOOPAS_BBOX_HEIGHT / 2;
-		right = left + KOOPAS_BBOX_WIDTH;
-		bottom = top + KOOPAS_BBOX_HEIGHT;
-	}*/
-
 	if (state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_SHELL_MOVING || state == KOOPAS_STATE_BEING_HELD)
 	{
 		left = x - KOOPAS_BBOX_WIDTH / 2;
@@ -74,18 +62,6 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	/*if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CKoopas*>(e->obj)) return;
-
-	if (e->ny != 0)
-	{
-		vy = 0;
-	}
-	else if (e->nx != 0)
-	{
-		vx = -vx;
-	}*/
-
 	// Skip if object is being held (Mario handles movement)
 	if (state == KOOPAS_STATE_BEING_HELD) return;
 
@@ -112,16 +88,20 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 		// Only change direction if walking or if it hit something while shell moving
 		if (state == KOOPAS_STATE_WALKING || state == KOOPAS_STATE_SHELL_MOVING || state == KOOPAS_STATE_REVIVING)
 		{
+			DWORD now = GetTickCount64();
+
 			// For shell moving, the direction change implies bouncing off obstacles
 			if (state == KOOPAS_STATE_SHELL_MOVING)
 			{
 				vx = -vx;
+				last_direction_change_time = now; // 
 			}
-			// For walking or reviving state, just turn around
-			else
+			// For walking state
+			else if (now - last_direction_change_time > 1000) // 1s cooldown
 			{
 				vx = -vx;
 				SetNx(-GetNx());  // Update the nx value
+				last_direction_change_time = now; // 
 			}
 		}
 	}
@@ -191,7 +171,12 @@ void CKoopas::OnCollisionWithPlatform(LPCOLLISIONEVENT e)
 	// For red koopas, check if they need to turn around at platform edges
 	if (type == KOOPAS_TYPE_RED && state == KOOPAS_STATE_WALKING && e->ny < 0)
 	{
-		HandleRedKoopaTurnaround();
+		// 
+		// 
+		if (abs(vy) < 0.01f) // 
+		{
+			HandleRedKoopaTurnaround();
+		}
 	}
 }
 
@@ -201,13 +186,20 @@ void CKoopas::HandleRedKoopaTurnaround()
 	if (type != KOOPAS_TYPE_RED || state != KOOPAS_STATE_WALKING)
 		return;
 
+	// 
+	DWORD now = GetTickCount64();
+	// 
+	if (now - last_edge_check_time < KOOPAS_EDGE_CHECK_COOLDOWN) return;
+
+	last_edge_check_time = now;
+
 	// Get current position
 	float left, top, right, bottom;
 	GetBoundingBox(left, top, right, bottom);
 
-	// Calculate position to check (slightly ahead in movement direction)
-	float ahead_x = (vx > 0) ? right + 4.0f : left - 4.0f;
-	float check_y = bottom + 4.0f; // Slightly below the koopa's feet
+	// 
+	float ahead_x = (vx > 0) ? right + 2.0f : left - 2.0f;
+	float check_y = bottom + 1.0f; // 
 
 	// Check if there's ground ahead
 	// This is a simplified check. In a complete implementation, 
@@ -245,18 +237,6 @@ void CKoopas::HandleRedKoopaTurnaround()
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	/*vy += ay * dt;
-	vx += ax * dt;
-
-	if ((state == KOOPAS_STATE_DIE) && (GetTickCount64() - die_start > KOOPAS_DIE_TIMEOUT))
-	{
-		isDeleted = true;
-		return;
-	}
-
-	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);*/
-
 	// Being held by Mario
 	if (state == KOOPAS_STATE_BEING_HELD)
 	{
@@ -311,6 +291,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (GetTickCount64() - revive_start > KOOPAS_REVIVE_TIMEOUT)
 			{
 				// Complete revival back to walking
+				// 
+				if (GetNx() == 0) SetNx(-1); // 
 				SetState(KOOPAS_STATE_WALKING);
 			}
 		}
@@ -328,85 +310,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state != KOOPAS_STATE_BEING_HELD)
 		CCollision::GetInstance()->Process(this, dt, coObjects);
 }
-
-
-//void CKoopas::Render()
-//{
-//	/*int aniId = ID_ANI_KOOPAS_WALKING;*/
-//	/*int aniId;
-//	if (state == KOOPAS_STATE_DIE)
-//	{
-//		aniId = ID_ANI_KOOPAS_DIE;
-//	}
-//	else {
-//		aniId = (vx > 0)
-//			? ID_ANI_KOOPAS_WALKING_RIGHT
-//			: ID_ANI_KOOPAS_WALKING_LEFT;
-//	}
-//
-//	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-//
-//	RenderBoundingBox();*/
-//
-//	int aniId;
-//
-//	// Select animation ID based on state and type
-//	if (type == KOOPAS_TYPE_GREEN)
-//	{
-//		switch (state)
-//		{
-//		case KOOPAS_STATE_DIE:
-//			aniId = ID_ANI_KOOPAS_SHELL;
-//			break;
-//		case KOOPAS_STATE_SHELL_MOVING:
-//			aniId = ID_ANI_KOOPAS_SHELL_MOVING;
-//			break;
-//		case KOOPAS_STATE_REVIVING:
-//			aniId = ID_ANI_KOOPAS_REVIVING;
-//			break;
-//		case KOOPAS_STATE_BEING_HELD:
-//			aniId = ID_ANI_KOOPAS_SHELL;
-//			break;
-//		default: // Walking state
-//			aniId = (vx > 0) ? ID_ANI_KOOPAS_WALKING_RIGHT : ID_ANI_KOOPAS_WALKING_LEFT;
-//			break;
-//		}
-//	}
-//	else // Red Koopas
-//	{
-//		switch (state)
-//		{
-//		case KOOPAS_STATE_DIE:
-//			aniId = ID_ANI_RED_KOOPAS_SHELL;
-//			break;
-//		case KOOPAS_STATE_SHELL_MOVING:
-//			aniId = ID_ANI_RED_KOOPAS_SHELL_MOVING;
-//			break;
-//		case KOOPAS_STATE_REVIVING:
-//			aniId = ID_ANI_RED_KOOPAS_REVIVING;
-//			break;
-//		case KOOPAS_STATE_BEING_HELD:
-//			aniId = ID_ANI_RED_KOOPAS_SHELL;
-//			break;
-//		default: // Walking state
-//			aniId = (vx > 0) ? ID_ANI_RED_KOOPAS_WALKING_RIGHT : ID_ANI_RED_KOOPAS_WALKING_LEFT;
-//			break;
-//		}
-//	}
-//
-//	CAnimations* animations = CAnimations::GetInstance();
-//	if (animations->Get(aniId) != NULL)
-//	{
-//		animations->Get(aniId)->Render(x, y);
-//	}
-//	else
-//	{
-//		// Fallback animation if the specific one is not found
-//		animations->Get(ID_ANI_KOOPAS_WALKING_LEFT)->Render(x, y);
-//	}
-//
-//	RenderBoundingBox();
-//}
 
 void CKoopas::Render()
 {
@@ -433,27 +336,6 @@ void CKoopas::Render()
 			break;
 		}
 	}
-	//if (type == KOOPAS_TYPE_RED)
-	//{
-	//	switch (state)
-	//	{
-	//	case KOOPAS_STATE_DIE:
-	//		aniId = ID_ANI_KOOPAS_RED_SHELL;             // 6004
-	//		break;
-	//	case KOOPAS_STATE_SHELL_MOVING:
-	//		aniId = ID_ANI_KOOPAS_RED_SHELL_MOVING;      // 6005
-	//		break;
-	//	case KOOPAS_STATE_REVIVING:
-	//		aniId = ID_ANI_KOOPAS_RED_REVIVING;         // 6006
-	//		break;
-	//	case KOOPAS_STATE_BEING_HELD:
-	//		aniId = ID_ANI_KOOPAS_RED_SHELL;            // 6004
-	//		break;
-	//	default: // Walking state
-	//		aniId = (vx > 0) ? ID_ANI_KOOPAS_RED_WALKING_RIGHT : ID_ANI_KOOPAS_RED_WALKING_LEFT; // 6003 / 6002
-	//		break;
-	//	}
-	//}
 
 	if (type == KOOPAS_TYPE_RED)
 	{
@@ -494,21 +376,6 @@ void CKoopas::Render()
 
 void CKoopas::SetState(int state)
 {
-	/*CGameObject::SetState(state);
-	switch (state)
-	{
-	case KOOPAS_STATE_DIE:
-		die_start = GetTickCount64();
-		y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_DIE) / 2;
-		vx = 0;
-		vy = 0;
-		ay = 0;
-		break;
-	case KOOPAS_STATE_WALKING:
-		vx = - KOOPAS_WALKING_SPEED;
-		break;
-	}*/
-
 	// Save old state and position for adjustments
 	int prevState = this->state;
 	float oldY = y;
@@ -539,8 +406,7 @@ void CKoopas::SetState(int state)
 		vx = GetNx() * KOOPAS_SHELL_SPEED; // Use stored direction for movement
 		ay = KOOPAS_GRAVITY;
 		shell_start = -1; // Reset the shell timeout
-		break;
-	case KOOPAS_STATE_WALKING:
+	break;	case KOOPAS_STATE_WALKING:
 		// If coming from shell, adjust position
 		if (prevState == KOOPAS_STATE_REVIVING)
 			y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_SHELL_HEIGHT) / 2;
@@ -548,6 +414,9 @@ void CKoopas::SetState(int state)
 		// Set initial direction for walking
 		if (GetNx() == 0) SetNx(-1); // Default direction if not set
 		vx = GetNx() * KOOPAS_WALKING_SPEED;
+		// ??ng b? l?i nx v?i h??ng di chuy?n
+		if (vx > 0) SetNx(1);
+		else if (vx < 0) SetNx(-1);
 		ay = KOOPAS_GRAVITY;
 		break;
 
