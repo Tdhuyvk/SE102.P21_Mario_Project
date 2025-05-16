@@ -1,5 +1,5 @@
 [SETTINGS]
-start	6
+start	7
 #width	320
 #height	240
 width	1366
@@ -14,6 +14,7 @@ height	768
 3	resources\scene03.txt
 5	resources\scene0005.txt
 6	resources\Mario1-1.txt
+7	resources\scene_testing.txt
 
 # id	file 
 [TEXTURES]

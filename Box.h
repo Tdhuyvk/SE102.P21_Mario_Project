@@ -35,6 +35,8 @@ public:
     void RenderBoundingBox();
 
     int IsDirectionColliable(float nx, float ny);
+
+    int IsBlocking() { return 1; }
 };
 
 typedef CBox* LPBOX;

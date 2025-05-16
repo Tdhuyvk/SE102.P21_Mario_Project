@@ -1,0 +1,86 @@
+# list of object assets to load in this scene
+[ASSETS]
+resources\mario.txt
+resources\brick.txt
+resources\coin.txt
+resources\goomba.txt
+resources\cloud.txt
+resources\koopas.txt
+resources\box.txt
+resources\ground.txt
+#resources\pipe.txt
+resources\bush.txt
+resources\cloudcute.txt
+resources\block.txt
+resources\levelup.txt
+
+#
+[OBJECTS]
+# type	x	y	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block, 12 LevelUp
+# See OBJECT_TYPE constants in AssetIDs.h
+
+
+# BRICKS
+#1	0	0
+#1	224	160
+
+#COIN
+4	1072	80
+4	1104	48
+4	1136	16
+4	1168	-16
+4	1200	-48
+
+#Box	0 white	1 green	2 pink	3 blue 
+7	272	96	3	5	16	16	3
+7	272	96	3	5	16	16	3
+7	240	128	3	3	16	16	2
+
+7	512	64	4	7	16	16	0
+7	464	96	4	5	16	16	2
+7	400	128	5	3	16	16	1
+7	512	144	6	2	16	16	1
+
+#Platform
+5	90	136	16	15	16	51000	52000	53000
+
+#Pipe
+#6	16	128	16	16	2	61000	62000	
+
+#Ground
+8	0	176	39	1	16	16
+8	624	160	29	2	16	16
+8	1152	176	22	1	16	16
+8	1536	176	5	1	16	16
+8	1664	176	36	1	16	16
+8	2256	176	35	1	16	16
+
+#Bush
+
+
+
+#CloudCute
+
+
+#Block
+#11	0	120
+
+#LevelUp
+#Mushroom
+#12	176	160
+
+#Portal 
+#50	300	110	316	140	2
+
+# MARIO
+0	20	120
+
+#Goomba
+#2	400	100
+
+#Koopas
+#3	350	100
+3	592	48	1
+
+

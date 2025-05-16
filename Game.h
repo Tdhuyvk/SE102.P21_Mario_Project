@@ -102,6 +102,10 @@ public:
 	int GetBackBufferWidth() { return backBufferWidth; }
 	int GetBackBufferHeight() { return backBufferHeight; }
 
+	// get and increase frame count
+	ULONGLONG GetFrameCount() { return frame_count; }
+	void IncrementFrameCount() { frame_count++; }
+
 	static CGame* GetInstance();
 
 	void SetPointSamplerState();
@@ -116,9 +120,6 @@ public:
 
 	void _ParseSection_TEXTURES(string line);
 
-	// get and increase frame count
-	ULONGLONG GetFrameCount() { return frame_count; }
-	void IncrementFrameCount() { frame_count++; }
 
 	~CGame();
 };

@@ -243,6 +243,6 @@ resources\levelup.txt
 
 #Koopas
 #3	350	100
-3	272	90	1
+3	608	90	1
 
 

@@ -5,13 +5,13 @@
 #include "Brick.h"
 #include "Block.h"
 #include "Platform.h"
+#include "PlatformChecker.h"
 
 class CMario;
 
 #define KOOPAS_GRAVITY 0.002f
 #define KOOPAS_WALKING_SPEED 0.05f
 
-// define shell
 #define	KOOPAS_SHELL_SPEED 0.2f
 #define KOOPAS_SHELL_DELECT_SPEED 0.3f
 
@@ -24,34 +24,25 @@ class CMario;
 #define KOOPAS_SHELL_TIMEOUT 5000
 #define KOOPAS_REVIVE_TIMEOUT 1000
 #define KOOPAS_BEING_HELD_TIMEOUT 10000
-#define KOOPAS_DIRECTION_CHANGE_COOLDOWN 2000
-#define KOOPAS_EDGE_CHECK_COOLDOWN 2000
 
-// define Koopas state
 #define KOOPAS_STATE_WALKING 100
 #define KOOPAS_STATE_DIE 200
 #define KOOPAS_STATE_SHELL_MOVING 300
 #define KOOPAS_STATE_REVIVING 400
 #define KOOPAS_STATE_BEING_HELD 500
 
-// define Koopas type
 #define KOOPAS_TYPE_RED 1
 #define KOOPAS_TYPE_GREEN 2
 
-// Animation IDs
-// Koopas red
 #define ID_ANI_KOOPAS_WALKING 6000
 #define ID_ANI_KOOPAS_DIE 6001
 
-
-// koopas red
 #define ID_ANI_KOOPAS_RED_WALKING_LEFT      6002
 #define ID_ANI_KOOPAS_RED_WALKING_RIGHT     6003
 #define ID_ANI_KOOPAS_RED_SHELL             6004
 #define ID_ANI_KOOPAS_RED_SHELL_MOVING      6005
 #define ID_ANI_KOOPAS_RED_REVIVING          6006
 
-// koopas green
 #define ID_ANI_KOOPAS_GREEN_WALKING_LEFT    6102
 #define ID_ANI_KOOPAS_GREEN_WALKING_RIGHT   6103
 #define ID_ANI_KOOPAS_GREEN_SHELL           6104
@@ -69,25 +60,28 @@ protected:
 	ULONGLONG revive_start;
 	ULONGLONG hold_start;
 
-	// 
-	ULONGLONG last_direction_change_time;
-	ULONGLONG last_edge_check_time;
+	ULONGLONG last_edge_check_time = 0;
+
+	ULONGLONG spawn_time;
 
 	int type;
 	bool isBeingHeld;
 	CMario* holdingMario;
 
+	bool    isBlockByPlatform;
+	bool    isOnPlatform;
+	CPlatformChecker* platformChecker;
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return state != KOOPAS_STATE_BEING_HELD; } // check state
+	virtual int IsCollidable() { return state != KOOPAS_STATE_BEING_HELD; }
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
-	// collision with others
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
@@ -95,6 +89,10 @@ protected:
 	void OnCollisionWithPlatform(LPCOLLISIONEVENT e);
 
 	void HandleRedKoopaTurnaround();
+
+	float  RelativedPositionOfChecker() {
+		return x + nx * (KOOPAS_BBOX_WIDTH / 2 + 1);
+	}
 
 public:
 	CKoopas(float x, float y, int type = KOOPAS_TYPE_RED);
