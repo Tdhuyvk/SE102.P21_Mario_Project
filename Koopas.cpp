@@ -330,81 +330,165 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 
 
+//void CKoopas::Render()
+//{
+//	/*int aniId = ID_ANI_KOOPAS_WALKING;*/
+//	/*int aniId;
+//	if (state == KOOPAS_STATE_DIE)
+//	{
+//		aniId = ID_ANI_KOOPAS_DIE;
+//	}
+//	else {
+//		aniId = (vx > 0)
+//			? ID_ANI_KOOPAS_WALKING_RIGHT
+//			: ID_ANI_KOOPAS_WALKING_LEFT;
+//	}
+//
+//	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+//
+//	RenderBoundingBox();*/
+//
+//	int aniId;
+//
+//	// Select animation ID based on state and type
+//	if (type == KOOPAS_TYPE_GREEN)
+//	{
+//		switch (state)
+//		{
+//		case KOOPAS_STATE_DIE:
+//			aniId = ID_ANI_KOOPAS_SHELL;
+//			break;
+//		case KOOPAS_STATE_SHELL_MOVING:
+//			aniId = ID_ANI_KOOPAS_SHELL_MOVING;
+//			break;
+//		case KOOPAS_STATE_REVIVING:
+//			aniId = ID_ANI_KOOPAS_REVIVING;
+//			break;
+//		case KOOPAS_STATE_BEING_HELD:
+//			aniId = ID_ANI_KOOPAS_SHELL;
+//			break;
+//		default: // Walking state
+//			aniId = (vx > 0) ? ID_ANI_KOOPAS_WALKING_RIGHT : ID_ANI_KOOPAS_WALKING_LEFT;
+//			break;
+//		}
+//	}
+//	else // Red Koopas
+//	{
+//		switch (state)
+//		{
+//		case KOOPAS_STATE_DIE:
+//			aniId = ID_ANI_RED_KOOPAS_SHELL;
+//			break;
+//		case KOOPAS_STATE_SHELL_MOVING:
+//			aniId = ID_ANI_RED_KOOPAS_SHELL_MOVING;
+//			break;
+//		case KOOPAS_STATE_REVIVING:
+//			aniId = ID_ANI_RED_KOOPAS_REVIVING;
+//			break;
+//		case KOOPAS_STATE_BEING_HELD:
+//			aniId = ID_ANI_RED_KOOPAS_SHELL;
+//			break;
+//		default: // Walking state
+//			aniId = (vx > 0) ? ID_ANI_RED_KOOPAS_WALKING_RIGHT : ID_ANI_RED_KOOPAS_WALKING_LEFT;
+//			break;
+//		}
+//	}
+//
+//	CAnimations* animations = CAnimations::GetInstance();
+//	if (animations->Get(aniId) != NULL)
+//	{
+//		animations->Get(aniId)->Render(x, y);
+//	}
+//	else
+//	{
+//		// Fallback animation if the specific one is not found
+//		animations->Get(ID_ANI_KOOPAS_WALKING_LEFT)->Render(x, y);
+//	}
+//
+//	RenderBoundingBox();
+//}
+
 void CKoopas::Render()
 {
-	/*int aniId = ID_ANI_KOOPAS_WALKING;*/
-	/*int aniId;
-	if (state == KOOPAS_STATE_DIE)
-	{
-		aniId = ID_ANI_KOOPAS_DIE;
-	}
-	else {
-		aniId = (vx > 0)
-			? ID_ANI_KOOPAS_WALKING_RIGHT
-			: ID_ANI_KOOPAS_WALKING_LEFT;
-	}
+	int aniId = -1;
 
-	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-
-	RenderBoundingBox();*/
-
-	int aniId;
-
-	// Select animation ID based on state and type
 	if (type == KOOPAS_TYPE_GREEN)
 	{
 		switch (state)
 		{
 		case KOOPAS_STATE_DIE:
-			aniId = ID_ANI_KOOPAS_SHELL;
+			aniId = ID_ANI_KOOPAS_GREEN_SHELL;          // 6104
 			break;
 		case KOOPAS_STATE_SHELL_MOVING:
-			aniId = ID_ANI_KOOPAS_SHELL_MOVING;
+			aniId = ID_ANI_KOOPAS_GREEN_SHELL_MOVING;   // 6105
 			break;
 		case KOOPAS_STATE_REVIVING:
-			aniId = ID_ANI_KOOPAS_REVIVING;
+			aniId = ID_ANI_KOOPAS_GREEN_REVIVING;        // 6106
 			break;
 		case KOOPAS_STATE_BEING_HELD:
-			aniId = ID_ANI_KOOPAS_SHELL;
+			aniId = ID_ANI_KOOPAS_GREEN_SHELL;           // 6104
 			break;
 		default: // Walking state
-			aniId = (vx > 0) ? ID_ANI_KOOPAS_WALKING_RIGHT : ID_ANI_KOOPAS_WALKING_LEFT;
+			aniId = (nx > 0) ? ID_ANI_KOOPAS_GREEN_WALKING_RIGHT : ID_ANI_KOOPAS_GREEN_WALKING_LEFT; // 6103 / 6102
 			break;
 		}
 	}
-	else // Red Koopas
+	//if (type == KOOPAS_TYPE_RED)
+	//{
+	//	switch (state)
+	//	{
+	//	case KOOPAS_STATE_DIE:
+	//		aniId = ID_ANI_KOOPAS_RED_SHELL;             // 6004
+	//		break;
+	//	case KOOPAS_STATE_SHELL_MOVING:
+	//		aniId = ID_ANI_KOOPAS_RED_SHELL_MOVING;      // 6005
+	//		break;
+	//	case KOOPAS_STATE_REVIVING:
+	//		aniId = ID_ANI_KOOPAS_RED_REVIVING;         // 6006
+	//		break;
+	//	case KOOPAS_STATE_BEING_HELD:
+	//		aniId = ID_ANI_KOOPAS_RED_SHELL;            // 6004
+	//		break;
+	//	default: // Walking state
+	//		aniId = (vx > 0) ? ID_ANI_KOOPAS_RED_WALKING_RIGHT : ID_ANI_KOOPAS_RED_WALKING_LEFT; // 6003 / 6002
+	//		break;
+	//	}
+	//}
+
+	if (type == KOOPAS_TYPE_RED)
 	{
 		switch (state)
 		{
 		case KOOPAS_STATE_DIE:
-			aniId = ID_ANI_RED_KOOPAS_SHELL;
+			aniId = ID_ANI_KOOPAS_RED_SHELL;             // 6004
 			break;
 		case KOOPAS_STATE_SHELL_MOVING:
-			aniId = ID_ANI_RED_KOOPAS_SHELL_MOVING;
+			aniId = ID_ANI_KOOPAS_RED_SHELL_MOVING;      // 6005
 			break;
 		case KOOPAS_STATE_REVIVING:
-			aniId = ID_ANI_RED_KOOPAS_REVIVING;
+			aniId = ID_ANI_KOOPAS_RED_REVIVING;          // 6006
 			break;
 		case KOOPAS_STATE_BEING_HELD:
-			aniId = ID_ANI_RED_KOOPAS_SHELL;
+			aniId = ID_ANI_KOOPAS_RED_SHELL;            // 6004
 			break;
 		default: // Walking state
-			aniId = (vx > 0) ? ID_ANI_RED_KOOPAS_WALKING_RIGHT : ID_ANI_RED_KOOPAS_WALKING_LEFT;
+			aniId = (nx > 0)
+				? ID_ANI_KOOPAS_RED_WALKING_RIGHT  // 6003
+				: ID_ANI_KOOPAS_RED_WALKING_LEFT;  // 6002
 			break;
 		}
 	}
 
 	CAnimations* animations = CAnimations::GetInstance();
-	if (animations->Get(aniId) != NULL)
+	LPANIMATION animation = animations->Get(aniId);
+
+	// Fallback animation
+	if (animation == nullptr)
 	{
-		animations->Get(aniId)->Render(x, y);
-	}
-	else
-	{
-		// Fallback animation if the specific one is not found
-		animations->Get(ID_ANI_KOOPAS_WALKING_LEFT)->Render(x, y);
+		animation = animations->Get(ID_ANI_KOOPAS_RED_WALKING_LEFT); //
 	}
 
+	animation->Render(x, y);
 	RenderBoundingBox();
 }
 

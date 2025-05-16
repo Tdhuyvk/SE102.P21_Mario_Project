@@ -34,6 +34,9 @@
 // define block
 #define OBJECT_TYPE_BLOCK 11
 
+// define levelup
+
+
 #define OBJECT_TYPE_PORTAL	50
 
 
