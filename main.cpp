@@ -189,6 +189,8 @@ int Run()
 			Update(dt);
 			Render();
 
+			CGame::GetInstance()->IncrementFrameCount(); // increase frame after each render
+
 			CGame::GetInstance()->SwitchScene();
 		}
 		else

@@ -49,6 +49,8 @@ class CGame
 	float cam_x = 0.0f;
 	float cam_y = 0.0f;
 
+	ULONGLONG frame_count = 0; // frame count
+
 	HINSTANCE hInstance;
 
 	ID3D10SamplerState* pPointSamplerState;
@@ -114,6 +116,9 @@ public:
 
 	void _ParseSection_TEXTURES(string line);
 
+	// get and increase frame count
+	ULONGLONG GetFrameCount() { return frame_count; }
+	void IncrementFrameCount() { frame_count++; }
 
 	~CGame();
 };
