@@ -35,7 +35,7 @@
 #define OBJECT_TYPE_BLOCK 11
 
 // define levelup
-
+#define OBJECT_TYPE_MUSHROOM 12
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -253,3 +253,6 @@
 
 // define id Block
 #define ID_SPRITE_BLOCK 120000
+
+// define id Levelup
+#define ID_SPRITE_MUSHROOM 130000

@@ -12,11 +12,12 @@ resources\ground.txt
 resources\bush.txt
 resources\cloudcute.txt
 resources\block.txt
+resources\levelup.txt
 
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block, 12 LevelUp
 # See OBJECT_TYPE constants in AssetIDs.h
 
 
@@ -225,7 +226,11 @@ resources\block.txt
 10	2320	48	1
 
 #Block
-11	0	120
+#11	0	120
+
+#LevelUp
+#Leaf
+12	176	160
 
 #Portal 
 #50	300	110	316	140	2

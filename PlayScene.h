@@ -20,6 +20,9 @@
 // include Block.h
 #include "Block.h"
 
+// include Mushroom.h
+#include "Mushroom.h"
+
 class CPlayScene: public CScene
 {
 protected: 

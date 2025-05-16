@@ -31,6 +31,8 @@
 // include Block.h
 #include "Block.h"
 
+// include Mushroom.h
+#include "Mushroom.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -272,6 +274,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = new CBlock(x, y);
+		break;
+	}
+
+	case OBJECT_TYPE_MUSHROOM:
+	{
+		// Format: object_type x y
+		if (tokens.size() < 3)
+		{
+			DebugOut(L"[ERROR] LevelUp object format invalid!\n");
+			return;
+		}
+		obj = new CMushroom(x, y);
 		break;
 	}
 
