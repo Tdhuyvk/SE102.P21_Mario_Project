@@ -14,6 +14,9 @@
 // include Mushroom.h
 #include "Mushroom.h"
 
+// include Block.h
+#include "Block.h"
+
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -68,6 +71,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopas(e);
 	else if (dynamic_cast<CMushroom*>(e->obj)) // collision with mushroom
 		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<CBlock*>(e->obj)) // collision with block
+		OnCollisionWithBlock(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -100,6 +105,22 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 					SetState(MARIO_STATE_DIE);
 				}
 			}
+		}
+	}
+}
+
+void CMario::OnCollisionWithBlock(LPCOLLISIONEVENT e)
+{
+	CBlock* block = dynamic_cast<CBlock*>(e->obj);
+	if (!block) return;
+
+	// Mario jump from below
+	if (e->ny > 0)
+	{
+		if (block->GetState() == BLOCK_STATE_QUESTION)
+		{
+			block->SetState(BLOCK_STATE_EMPTY);
+			// add later
 		}
 	}
 }

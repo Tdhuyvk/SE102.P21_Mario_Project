@@ -5,12 +5,15 @@
 #include "PlayScene.h"
 #include "Mario.h"
 
+// set state
+CBlock::CBlock(float x, float y) : CGameObject(x, y) {
+    SetState(BLOCK_STATE_QUESTION);
+}
+
+
 void CBlock::Render() {
-    CAnimations* animations = CAnimations::GetInstance();
-    if (!used)
-        animations->Get(ID_ANI_BLOCK_QUESTION)->Render(x + BLOCK_BBOX_WIDTH / 2, y + BLOCK_BBOX_HEIGHT / 2);
-    else
-        animations->Get(ID_ANI_BLOCK_EMPTY)->Render(x + BLOCK_BBOX_WIDTH / 2, y + BLOCK_BBOX_HEIGHT / 2);
+    int aniId = (state == BLOCK_STATE_QUESTION) ? ID_ANI_BLOCK_QUESTION : ID_ANI_BLOCK_EMPTY;
+    CAnimations::GetInstance()->Get(aniId)->Render(x + BLOCK_BBOX_WIDTH / 2, y + BLOCK_BBOX_HEIGHT / 2);
     RenderBoundingBox();
 }
 
@@ -59,15 +62,19 @@ void CBlock::Update(DWORD dt, vector<LPGAMEOBJECT>*coObjects) {
 void CBlock::OnCollisionWith(LPCOLLISIONEVENT e) {
     DebugOut(L"[BLOCK] Collision! ny = %.2f\n", e->ny);
 
-    if (used || e->ny <= 0) return;
+    if (state == BLOCK_STATE_EMPTY || e->ny <= 0) return;
 
     CMario* mario = dynamic_cast<CMario*>(e->obj);
     if (mario) {
-        used = true;
+        SetState(BLOCK_STATE_EMPTY);
         DebugOut(L"[BLOCK] Activated by Mario!\n");
 
         CCoin* coin = new CCoin(x, y - 16);
         CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
         if (scene) scene->AddObject(coin);
     }
+}
+
+void CBlock::SetState(int state) {
+    CGameObject::SetState(state);
 }
