@@ -3,6 +3,7 @@
 
 #include "Mario.h"
 #include "Game.h"
+#include "PlayScene.h"
 
 #include "Goomba.h"
 #include "Coin.h"
@@ -120,11 +121,15 @@ void CMario::OnCollisionWithBlock(LPCOLLISIONEVENT e)
 		if (block->GetState() == BLOCK_STATE_QUESTION)
 		{
 			block->SetState(BLOCK_STATE_EMPTY);
-			// add later
-			if (block->GetType() == 0) // coin
+			CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+			if (block->GetType() == 0 && scene) // coin
 			{
 				coin++;
-				// Optionally: DebugOut(L"[MARIO] Get coin! coins = %d\n", coin);
+			}
+			else if (block->GetType() == 1 && scene) // mushroom
+			{
+				CMushroom* mushroom = new CMushroom(block->GetX(), block->GetY() - 16);
+				scene->AddObject(mushroom);
 			}
 		}
 	}
