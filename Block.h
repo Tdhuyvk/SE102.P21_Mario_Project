@@ -14,9 +14,11 @@
 
 class CBlock : public CGameObject {
 private:
-
+    int type; // 0: coin, 1: mushroom
 public:
-    CBlock(float x, float y);
+    CBlock(float x, float y, int type);
+    int GetType() const { return type; }
+
     void Render();
     void RenderBoundingBox();
     void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = nullptr);

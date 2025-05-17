@@ -4,9 +4,11 @@
 #include "Coin.h"
 #include "PlayScene.h"
 #include "Mario.h"
+#include "Mushroom.h"
 
 // set state
-CBlock::CBlock(float x, float y) : CGameObject(x, y) {
+CBlock::CBlock(float x, float y, int type) : CGameObject(x, y) {
+    this->type = type;
     SetState(BLOCK_STATE_QUESTION);
 }
 
@@ -64,7 +66,7 @@ void CBlock::OnCollisionWith(LPCOLLISIONEVENT e) {
 
     if (state == BLOCK_STATE_EMPTY || e->ny <= 0) return;
 
-    CMario* mario = dynamic_cast<CMario*>(e->obj);
+    /*CMario* mario = dynamic_cast<CMario*>(e->obj);
     if (mario) {
         SetState(BLOCK_STATE_EMPTY);
         DebugOut(L"[BLOCK] Activated by Mario!\n");
@@ -72,6 +74,25 @@ void CBlock::OnCollisionWith(LPCOLLISIONEVENT e) {
         CCoin* coin = new CCoin(x, y - 16);
         CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
         if (scene) scene->AddObject(coin);
+    }*/
+
+    CMario* mario = dynamic_cast<CMario*>(e->obj);
+    if (mario) {
+        SetState(BLOCK_STATE_EMPTY);
+        DebugOut(L"[BLOCK] Activated by Mario!\n");
+
+        CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+        if (scene) {
+            if (type == 0) { // Coin
+                //CCoin* coin = new CCoin(x, y - 16);
+                //scene->AddObject(coin);
+                DebugOut(L"[BLOCK] Type Coin!\n");
+            }
+            else if (type == 1) { // Mushroom
+                CMushroom* mushroom = new CMushroom(x, y + 16);
+                scene->AddObject(mushroom);
+            }
+        }
     }
 }
 

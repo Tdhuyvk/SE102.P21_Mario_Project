@@ -121,6 +121,11 @@ void CMario::OnCollisionWithBlock(LPCOLLISIONEVENT e)
 		{
 			block->SetState(BLOCK_STATE_EMPTY);
 			// add later
+			if (block->GetType() == 0) // coin
+			{
+				coin++;
+				// Optionally: DebugOut(L"[MARIO] Get coin! coins = %d\n", coin);
+			}
 		}
 	}
 }
@@ -246,7 +251,6 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 		StartUntouchable();
 	}
 	e->obj->Delete();
-	coin++;
 }
 
 //

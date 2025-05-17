@@ -267,13 +267,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case OBJECT_TYPE_BLOCK:
 	{
-		// Format: object_type x y
-		if (tokens.size() < 3)
+		// Format: object_type x y block_type
+		if (tokens.size() < 4)
 		{
 			DebugOut(L"[ERROR] Block object format invalid!\n");
 			return;
 		}
-		obj = new CBlock(x, y);
+		int block_type = atoi(tokens[3].c_str());
+		obj = new CBlock(x, y, block_type);
 		break;
 	}
 
