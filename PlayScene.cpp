@@ -180,26 +180,42 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	//case OBJECT_TYPE_PIPE:
+	//{
+	//	// 6   x   y   cell_width   cell_height   height   sprite_top   sprite_bottom
+	//	if (tokens.size() < 8)
+	//	{
+	//		DebugOut(L"[ERROR] Pipe object format invalid!\n");
+	//		return;
+	//	}
+
+	//	float cell_width = (float)atof(tokens[3].c_str());
+	//	float cell_height = (float)atof(tokens[4].c_str());
+	//	int height = atoi(tokens[5].c_str());
+	//	int sprite_top = atoi(tokens[6].c_str());
+	//	int sprite_bottom = atoi(tokens[7].c_str());
+
+	//	obj = new CPipe(
+	//		x, y,
+	//		cell_width, cell_height, height,
+	//		sprite_top, sprite_bottom
+	//	);
+	//	break;
+	//}
+
 	case OBJECT_TYPE_PIPE:
 	{
-		// 6   x   y   cell_width   cell_height   height   sprite_top   sprite_bottom
-		if (tokens.size() < 8)
+		// Format: object_type   x   y   height   pipe_type
+		if (tokens.size() < 5)
 		{
 			DebugOut(L"[ERROR] Pipe object format invalid!\n");
 			return;
 		}
 
-		float cell_width = (float)atof(tokens[3].c_str());
-		float cell_height = (float)atof(tokens[4].c_str());
-		int height = atoi(tokens[5].c_str());
-		int sprite_top = atoi(tokens[6].c_str());
-		int sprite_bottom = atoi(tokens[7].c_str());
+		int height = atoi(tokens[3].c_str());
+		int pipe_type = atoi(tokens[4].c_str());
 
-		obj = new CPipe(
-			x, y,
-			cell_width, cell_height, height,
-			sprite_top, sprite_bottom
-		);
+		obj = new CPipe(x, y, height, pipe_type);
 		break;
 	}
 

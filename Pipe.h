@@ -8,22 +8,14 @@
 class CPipe : public CGameObject
 {
 protected:
-	int height;				// Unit: cell 
+	int height;				// Unit: cell
+	int type;				// type: 0 -> pipe up, 1 -> pipe down
 	float cellWidth;
 	float cellHeight;
 	int spriteIdTop, spriteIdBottom;
 
 public:
-	CPipe(float x, float y,
-		float cell_width, float cell_height, int height,
-		int sprite_id_top, int sprite_id_bottom) :CGameObject(x, y)
-	{
-		this->height = height;
-		this->cellWidth = cell_width;
-		this->cellHeight = cell_height;
-		this->spriteIdTop = sprite_id_top;
-		this->spriteIdBottom = sprite_id_bottom;
-	}
+	CPipe(float x, float y, int height, int type);
 
 	void Render();
 	void Update(DWORD dt) {}
