@@ -1,0 +1,28 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#VENUS RED
+#LEFT
+
+
+#RIGHT
+
+
+#VENUS GREEN
+#LEFT
+
+
+#RIGHT
+
+
+#PIRANHA GREEN
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+#Red Venus
+
+
+#Green Venus
+
+
+#Green Piranha
