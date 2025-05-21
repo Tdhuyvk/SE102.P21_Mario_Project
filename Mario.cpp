@@ -130,6 +130,9 @@ void CMario::OnCollisionWithBlock(LPCOLLISIONEVENT e)
 			{
 				CMushroom* mushroom = new CMushroom(block->GetX(), block->GetY() - 16);
 				scene->AddObject(mushroom);
+
+				/*CGoomba* goomba = new CGoomba(block->GetX(), block->GetY() - 16);
+				scene->AddObject(goomba);*/
 			}
 		}
 	}
