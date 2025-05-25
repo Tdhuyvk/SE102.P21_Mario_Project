@@ -19,7 +19,7 @@ height	768
 # id	file 
 [TEXTURES]
 -100	textures\bbox.png
-0	textures\mario.png
+0	textures\_mario.png
 10	textures\enemies.png
 20	textures\misc.png
 30	textures\map1-1.png
