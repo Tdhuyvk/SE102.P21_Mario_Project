@@ -142,7 +142,7 @@ void CKoopas::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 
 void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 {
-	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+	/*CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 
 	if (state == KOOPAS_STATE_SHELL_MOVING && e->nx != 0)
 	{
@@ -150,7 +150,7 @@ void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 
 		if (vx > 0) SetNx(1);
 		else SetNx(-1);
-	}
+	}*/
 }
 
 void CKoopas::OnCollisionWithBlock(LPCOLLISIONEVENT e)

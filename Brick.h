@@ -10,8 +10,8 @@
 #define BRICK_BBOX_HEIGHT 16
 
 // define brick state
-#define BRICK_STATE_NORMAL 100
-#define BRICK_STATE_BROKEN 200
+//#define BRICK_STATE_NORMAL 100
+//#define BRICK_STATE_BROKEN 200
 
 class CBrick : public CGameObject {
 public:
@@ -21,7 +21,7 @@ public:
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void RenderBoundingBox();
 
-	virtual int IsCollidable() override { return 1; }
+	/*virtual int IsCollidable() override { return 1; }
 	virtual int IsBlocking() override { return 1; }
-	virtual void SetState(int state);
+	virtual void SetState(int state);*/
 };

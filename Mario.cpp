@@ -39,6 +39,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isHolding = false;
 	}
 
+	// reset isKicking after 0.3s
+	if (isKicking && GetTickCount64() - kick_start > 300) {
+		isKicking = false;
+	}
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
@@ -254,8 +259,8 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 
-	if (level < MARIO_LEVEL_BIG) {
-		SetLevel(MARIO_LEVEL_BIG);
+	if (level < MARIO_LEVEL_RACCOON) {
+		SetLevel(MARIO_LEVEL_RACCOON);
 		StartUntouchable();
 	}
 	e->obj->Delete();
@@ -384,6 +389,70 @@ int CMario::GetAniIdBig()
 	return aniId;
 }
 
+//
+// Get animation ID for raccoon Mario
+//
+int CMario::GetAniIdRaccoon()
+{
+	int aniId = -1;
+	if (!isOnPlatform)
+	{
+		if (isHolding)
+		{
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_HOLD_RIGHT_JUMP : ID_ANI_MARIO_RACCOON_HOLD_LEFT_JUMP;
+		}
+		else if (abs(ax) == MARIO_ACCEL_RUN_X)
+		{
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_JUMP_RUN_RIGHT : ID_ANI_MARIO_RACCOON_JUMP_RUN_LEFT;
+		}
+		else
+		{
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT : ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
+		}
+	}
+	else if (isSitting)
+	{
+		aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_SIT_RIGHT : ID_ANI_MARIO_RACCOON_SIT_LEFT;
+	}
+	else if (vx == 0)
+	{
+		if (isHolding)
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_HOLD_RIGHT_IDLE : ID_ANI_MARIO_RACCOON_HOLD_LEFT_IDLE;
+		else if (isKicking)
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_KICK_RIGHT : ID_ANI_MARIO_RACCOON_KICK_LEFT;
+		else
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_IDLE_RIGHT : ID_ANI_MARIO_RACCOON_IDLE_LEFT;
+	}
+	else if (vx > 0)
+	{
+		if (isHolding)
+			aniId = ID_ANI_MARIO_RACCOON_HOLD_RIGHT_WALKING;
+		else if (isKicking)
+			aniId = ID_ANI_MARIO_RACCOON_KICK_RIGHT;
+		else if (ax < 0)
+			aniId = ID_ANI_MARIO_RACCOON_BRACE_RIGHT;
+		else if (ax == MARIO_ACCEL_RUN_X)
+			aniId = ID_ANI_MARIO_RACCOON_RUNNING_RIGHT;
+		else
+			aniId = ID_ANI_MARIO_RACCOON_WALKING_RIGHT;
+	}
+	else // vx < 0
+	{
+		if (isHolding)
+			aniId = ID_ANI_MARIO_RACCOON_HOLD_LEFT_WALKING;
+		else if (isKicking)
+			aniId = ID_ANI_MARIO_RACCOON_KICK_LEFT;
+		else if (ax > 0)
+			aniId = ID_ANI_MARIO_RACCOON_BRACE_LEFT;
+		else if (ax == -MARIO_ACCEL_RUN_X)
+			aniId = ID_ANI_MARIO_RACCOON_RUNNING_LEFT;
+		else
+			aniId = ID_ANI_MARIO_RACCOON_WALKING_LEFT;
+	}
+	if (aniId == -1) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
+	return aniId;
+}
+
 void CMario::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
@@ -391,6 +460,11 @@ void CMario::Render()
 
 	if (state == MARIO_STATE_DIE)
 		aniId = ID_ANI_MARIO_DIE;
+	
+	// raccoon
+	else if (level == MARIO_LEVEL_RACCOON)
+		aniId = GetAniIdRaccoon();
+
 	else if (level == MARIO_LEVEL_BIG)
 		aniId = GetAniIdBig();
 	else if (level == MARIO_LEVEL_SMALL)
@@ -449,6 +523,12 @@ void CMario::SetState(int state)
 		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
 
+	// state kick
+	case MARIO_STATE_KICK:
+		isKicking = true;
+		kick_start = GetTickCount64();
+		break;
+
 	// state hold
 	case MARIO_STATE_HOLD:
 		isHolding = true;
@@ -457,6 +537,9 @@ void CMario::SetState(int state)
 	case MARIO_STATE_RELEASE_HOLD:
 		if (isHolding && heldKoopas != NULL) {
 			ReleaseKoopas();
+
+			// kick after release
+			SetState(MARIO_STATE_KICK);
 		}
 		isHolding = false;
 		break;
@@ -497,7 +580,16 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (level==MARIO_LEVEL_BIG)
+	// raccoon mario
+	if (level == MARIO_LEVEL_RACCOON)
+	{
+		left = x - MARIO_RACCOON_BBOX_WIDTH / 2;
+		top = y - MARIO_RACCOON_BBOX_HEIGHT / 2;
+		right = left + MARIO_RACCOON_BBOX_WIDTH;
+		bottom = top + MARIO_RACCOON_BBOX_HEIGHT;
+	}
+
+	else if (level==MARIO_LEVEL_BIG)
 	{
 		if (isSitting)
 		{
@@ -526,7 +618,8 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 void CMario::SetLevel(int l)
 {
 	// Adjust position to avoid falling off platform
-	if (this->level == MARIO_LEVEL_SMALL)
+	/*if (this->level == MARIO_LEVEL_SMALL)*/
+	if (this->level == MARIO_LEVEL_SMALL && l != MARIO_LEVEL_SMALL)
 	{
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}

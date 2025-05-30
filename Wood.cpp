@@ -1,0 +1,48 @@
+#include "Wood.h"
+#include "Textures.h"
+#include "Game.h"
+
+void CWood::Render()
+{
+    CAnimations* animations = CAnimations::GetInstance();
+    CSprites::GetInstance()->Get(ID_SPRITE_WOOD)->Draw(x + WOOD_BBOX_WIDTH / 2, y + WOOD_BBOX_HEIGHT / 2);
+    //RenderBoundingBox();
+}
+
+void CWood::GetBoundingBox(float& l, float& t, float& r, float& b)
+{
+    // top-left
+    l = x;
+    t = y;
+    r = x + WOOD_BBOX_WIDTH;
+    b = y + WOOD_BBOX_HEIGHT;
+}
+
+void CWood::RenderBoundingBox()
+{
+    float l, t, r, b;
+    GetBoundingBox(l, t, r, b);
+
+    RECT rect;
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = (int)(r - l);
+    rect.bottom = (int)(b - t);
+
+    // center bounding box
+    float xx = (l + r) / 2.0f;
+    float yy = (t + b) / 2.0f;
+
+    // get camera
+    float cx, cy;
+    CGame::GetInstance()->GetCamPos(cx, cy);
+
+    // draw bounding box with (centerX, centerY)
+    auto bboxTex = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+    CGame::GetInstance()->Draw(
+        xx - cx, yy - cy,
+        bboxTex, nullptr,
+        BBOX_ALPHA,
+        rect.right, rect.bottom
+    );
+}
