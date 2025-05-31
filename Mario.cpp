@@ -259,8 +259,8 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 
-	if (level < MARIO_LEVEL_RACCOON) {
-		SetLevel(MARIO_LEVEL_RACCOON);
+	if (level < MARIO_LEVEL_BIG) {
+		SetLevel(MARIO_LEVEL_BIG);
 		StartUntouchable();
 	}
 	e->obj->Delete();
