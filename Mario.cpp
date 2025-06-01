@@ -15,6 +15,9 @@
 // include Mushroom.h
 #include "Mushroom.h"
 
+// include SuperLeaf.h
+#include "SuperLeaf.h"
+
 // include Block.h
 #include "Block.h"
 
@@ -77,6 +80,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopas(e);
 	else if (dynamic_cast<CMushroom*>(e->obj)) // collision with mushroom
 		OnCollisionWithMushroom(e);
+	else if (dynamic_cast<CSuperLeaf*>(e->obj))
+		OnCollisionWithSuperLeaf(e);
 	else if (dynamic_cast<CBlock*>(e->obj)) // collision with block
 		OnCollisionWithBlock(e);
 }
@@ -133,11 +138,13 @@ void CMario::OnCollisionWithBlock(LPCOLLISIONEVENT e)
 			}
 			else if (block->GetType() == 1 && scene) // mushroom
 			{
-				CMushroom* mushroom = new CMushroom(block->GetX(), block->GetY() - 16);
+				CMushroom* mushroom = new CMushroom(block->GetX(), block->GetY() - 32);
 				scene->AddObject(mushroom);
-
-				/*CGoomba* goomba = new CGoomba(block->GetX(), block->GetY() - 16);
-				scene->AddObject(goomba);*/
+			}
+			else if (block->GetType() == 2 && scene) // superleaf
+			{
+				CSuperLeaf* superleaf = new CSuperLeaf(block->GetX(), block->GetY() - 16);
+				scene->AddObject(superleaf);
 			}
 		}
 	}
@@ -261,6 +268,15 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 
 	if (level < MARIO_LEVEL_BIG) {
 		SetLevel(MARIO_LEVEL_BIG);
+		StartUntouchable();
+	}
+	e->obj->Delete();
+}
+
+void CMario::OnCollisionWithSuperLeaf(LPCOLLISIONEVENT e)
+{
+	if (level < MARIO_LEVEL_RACCOON) {
+		SetLevel(MARIO_LEVEL_RACCOON);
 		StartUntouchable();
 	}
 	e->obj->Delete();

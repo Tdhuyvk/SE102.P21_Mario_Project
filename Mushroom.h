@@ -14,7 +14,6 @@
 
 class CMushroom : public CGameObject {
 protected:
-protected:
 	float ax;
 	float ay;
 

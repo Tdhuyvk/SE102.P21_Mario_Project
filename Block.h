@@ -14,7 +14,7 @@
 
 class CBlock : public CGameObject {
 private:
-    int type; // 0: coin, 1: mushroom
+    int type; // 0: coin, 1: mushroom, 2: superleaf
 public:
     CBlock(float x, float y, int type);
     int GetType() const { return type; }

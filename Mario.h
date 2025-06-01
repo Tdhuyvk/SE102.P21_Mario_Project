@@ -205,6 +205,9 @@ class CMario : public CGameObject
 	// collision with Mushroom
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 
+	// collision with Leaf
+	void OnCollisionWithSuperLeaf(LPCOLLISIONEVENT e);
+
 	// collision with Block
 	void OnCollisionWithBlock(LPCOLLISIONEVENT e);
 
