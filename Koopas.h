@@ -64,6 +64,8 @@ protected:
 
 	ULONGLONG spawn_time;
 
+	int coin;
+
 	int type;
 	bool isBeingHeld;
 	CMario* holdingMario;

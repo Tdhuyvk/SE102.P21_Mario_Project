@@ -5,6 +5,7 @@
 #include "PlayScene.h"
 #include "Mario.h"
 #include "Mushroom.h"
+#include "Koopas.h"
 
 // set state
 CBlock::CBlock(float x, float y, int type) : CGameObject(x, y) {
@@ -71,6 +72,12 @@ void CBlock::OnCollisionWith(LPCOLLISIONEVENT e) {
         SetState(BLOCK_STATE_EMPTY);
         DebugOut(L"[BLOCK] Activated by Mario!\n");
 
+    }
+
+    CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+    if (koopas) {
+        SetState(BLOCK_STATE_EMPTY);
+        DebugOut(L"[BLOCK] Activated by Koopas!\n");
     }
 }
 

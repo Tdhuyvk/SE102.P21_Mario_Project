@@ -8,6 +8,10 @@
 #include "PlayScene.h"
 #include "Game.h"
 
+#include "Coin.h"
+#include "Mushroom.h"
+#include "SuperLeaf.h"
+
 CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y), type(type)
 {
 	this->ax = 0;
@@ -156,6 +160,33 @@ void CKoopas::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 void CKoopas::OnCollisionWithBlock(LPCOLLISIONEVENT e)
 {
 	// Default behavior
+
+	CBlock* block = dynamic_cast<CBlock*>(e->obj);
+	if (!block) return;
+
+	// Koopas shell collision side
+	if (e->nx != 0)
+	{
+		if (block->GetState() == BLOCK_STATE_QUESTION)
+		{
+			block->SetState(BLOCK_STATE_EMPTY);
+			CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+			if (block->GetType() == 0 && scene) // coin
+			{
+				coin++;
+			}
+			else if (block->GetType() == 1 && scene) // mushroom
+			{
+				CMushroom* mushroom = new CMushroom(block->GetX(), block->GetY() - 32);
+				scene->AddObject(mushroom);
+			}
+			else if (block->GetType() == 2 && scene) // superleaf
+			{
+				CSuperLeaf* superleaf = new CSuperLeaf(block->GetX(), block->GetY() - 16);
+				scene->AddObject(superleaf);
+			}
+		}
+	}
 }
 
 void CKoopas::OnCollisionWithPlatform(LPCOLLISIONEVENT e) {

@@ -13,27 +13,6 @@ CSuperLeaf::CSuperLeaf(float x, float y) :CGameObject(x, y)
 
 void CSuperLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-    /*vy += ay * dt;
-
-    if (vy > 0)
-    {
-        if (dir == 1)
-        {
-            vx += 0.0001f * dt;
-            if (vx >= LEAF_MAX_HORIZONTAL_SPEED)
-                dir = -1;
-        }
-        else
-        {
-            vx -= 0.0001f * dt;
-            if (vx <= -LEAF_MAX_HORIZONTAL_SPEED)
-                dir = 1;
-        }
-    }
-
-    x += vx * dt;
-    y += vy * dt;*/
-
     if (vy <= 0)
         vy += LEAF_ACCEL_Y * dt;
 
@@ -65,7 +44,7 @@ void CSuperLeaf::Render()
     else
         CAnimations::GetInstance()->Get(ID_ANI_SUPER_LEAF_LEFT)->Render(x, y);
 
-    RenderBoundingBox();
+    //RenderBoundingBox();
 }
 
 void CSuperLeaf::GetBoundingBox(float& l, float& t, float& r, float& b)
