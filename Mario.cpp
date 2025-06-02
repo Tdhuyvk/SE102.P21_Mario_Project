@@ -18,6 +18,9 @@
 // include SuperLeaf.h
 #include "SuperLeaf.h"
 
+// include BouncingCoin.h
+#include "BouncingCoin.h"
+
 // include Block.h
 #include "Block.h"
 
@@ -134,6 +137,8 @@ void CMario::OnCollisionWithBlock(LPCOLLISIONEVENT e)
 			CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
 			if (block->GetType() == 0 && scene) // coin
 			{
+				CBouncingCoin* bouncing_coin = new CBouncingCoin(block->GetX(), block->GetY() - 16);
+				scene->AddObject(bouncing_coin);
 				coin++;
 			}
 			else if (block->GetType() == 1 && scene) // mushroom

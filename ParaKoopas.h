@@ -1,0 +1,5 @@
+#pragma once
+#include "Koopas.h"
+
+#define ID_ANI_KARA_KOOPAS_GREEN_WALKING_LEFT    6202
+#define ID_ANI_KARA_KOOPAS_GREEN_WALKING_RIGHT   6203
