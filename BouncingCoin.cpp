@@ -1,5 +1,6 @@
 #include "BouncingCoin.h"
 
+
 CBouncingCoin::CBouncingCoin(float x, float y) : CCoin(x, y) {
     def_y = y;
     vy = -BOUNCING_COIN_BOUNCE_FORCE;
