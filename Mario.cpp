@@ -24,6 +24,9 @@
 // include Block.h
 #include "Block.h"
 
+// include ParaKoopas.h
+#include "ParaKoopas.h"
+
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -81,6 +84,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CKoopas*>(e->obj)) // collision with koopas
 		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<CParaKoopas*>(e->obj)) // collision with para koopas
+		OnCollisionWithParaKoopas(e);
 	else if (dynamic_cast<CMushroom*>(e->obj)) // collision with mushroom
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<CSuperLeaf*>(e->obj))
@@ -266,6 +271,11 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			}
 		}
 	}
+}
+
+void CMario::OnCollisionWithParaKoopas(LPCOLLISIONEVENT e)
+{
+	//
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)

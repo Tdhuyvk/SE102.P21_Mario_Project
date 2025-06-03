@@ -202,6 +202,9 @@ class CMario : public CGameObject
 	// collision with Koopas
 	void OnCollisionWithKoopas(LPCOLLISIONEVENT e);
 
+	// collision with Para Koopas
+	void OnCollisionWithParaKoopas(LPCOLLISIONEVENT e);
+
 	// collision with Mushroom
 	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
 

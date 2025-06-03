@@ -18,7 +18,7 @@ resources\wood.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block, 12 Mushroom, 13 Leaf, 15 Wood
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block, 12 Mushroom, 13 Leaf, 15 Wood, 16 Para Koopas, 17 Para Goomba
 # See OBJECT_TYPE constants in AssetIDs.h
 
 
@@ -277,7 +277,7 @@ resources\wood.txt
 0	20	120
 
 #Goomba
-2	224	144
+#2	224	144
 
 #2	992	0
 #2	1024	0
@@ -287,4 +287,5 @@ resources\wood.txt
 #3	350	100
 3	592	48	1
 
-
+#Para Koopas
+16	224	144	3

@@ -1,5 +1,6 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+##### KOOPAS RED #####
 #WALK RED KOOPAS
 #LEFT
 71111	28	67	43	92	50
@@ -19,6 +20,7 @@
 #REVIVING
 71301	71	75	88	90	50
 
+##### KOOPAS GREEN #####
 #WALK GREEN KOOPAS
 #LEFT
 72111	31	119	46	144	50
@@ -38,6 +40,15 @@
 #REVIVING
 72301	74	127	91	142	50
 
+##### PARA KOOPAS GREEN #####
+73100	105	129	120	155	50
+73200	126	130	141	155	50
+73300	147	129	162	155	50
+
+73400	527	129	542	155	50
+73500	506	130	521	155	50
+73600	485	129	500	155	50
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #Red Koopas
@@ -53,6 +64,10 @@
 6104	72201	100             #Shell stationary
 6105	72211	50	72212	50             #Shell moving
 6106	72301	200             #Reviving
+
+#Para Koopas Green
+6202	73100	100	73200	100	73300	100
+6203	73400	100	73500	100	73600	100
 
 # Legacy animations
 6001	71201	100

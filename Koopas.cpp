@@ -12,6 +12,8 @@
 #include "Mushroom.h"
 #include "SuperLeaf.h"
 
+#include "ParaKoopas.h"
+
 CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y), type(type)
 {
 	this->ax = 0;
@@ -79,6 +81,35 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (!e->obj->IsBlocking()) return;
+
+	if (e->ny != 0)
+	{
+		vy = 0;
+
+		if (e->ny < 0) {
+			isOnPlatform = true;
+		}
+	}
+	else if (e->nx != 0)
+	{
+		/*if (state == KOOPAS_STATE_WALKING || state == KOOPAS_STATE_SHELL_MOVING || state == KOOPAS_STATE_REVIVING)
+		{
+			if (state == KOOPAS_STATE_SHELL_MOVING)
+			{
+				vx = -vx;
+			}
+			else
+			{
+				vx = -vx;
+				SetNx(-GetNx());
+			}
+		}*/
+
+		vx = -vx;
+		nx = -nx;
+	}
+	
 	if (state == KOOPAS_STATE_BEING_HELD) return;
 
 	if (dynamic_cast<CGoomba*>(e->obj))
@@ -92,27 +123,6 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CPlatform*>(e->obj))
 		OnCollisionWithPlatform(e);
 
-	if (!e->obj->IsBlocking()) return;
-
-	if (e->ny != 0)
-	{
-		vy = 0;
-	}
-	else if (e->nx != 0)
-	{
-		if (state == KOOPAS_STATE_WALKING || state == KOOPAS_STATE_SHELL_MOVING || state == KOOPAS_STATE_REVIVING)
-		{
-			if (state == KOOPAS_STATE_SHELL_MOVING)
-			{
-				vx = -vx;
-			}
-			else
-			{
-				vx = -vx;
-				SetNx(-GetNx());
-			}
-		}
-	}
 }
 
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -198,7 +208,6 @@ void CKoopas::OnCollisionWithPlatform(LPCOLLISIONEVENT e) {
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	isOnPlatform = false;
 
 	if (state == KOOPAS_STATE_BEING_HELD)
 	{
@@ -271,6 +280,24 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (state != KOOPAS_STATE_BEING_HELD)
 			CCollision::GetInstance()->Process(this, dt, coObjects);
 	}
+
+	vy += ay * dt;
+	vx += ax * dt;
+
+	if (!isBeingHeld)
+		CCollision::GetInstance()->Process(this, dt, coObjects);
+
+	
+	if (type == PARA_KOOPAS_TYPE_GREEN && state == PARA_KOOPAS_STATE_FLY)
+	{
+		if (isOnPlatform)
+		{
+			vy = -PARA_KOOPAS_FLY_SPEED;
+			if (vx == 0) vx = nx * KOOPAS_WALKING_SPEED;
+		}
+	}
+
+	isOnPlatform = false;
 }
 
 void CKoopas::Render()
@@ -389,6 +416,16 @@ void CKoopas::SetState(int state)
 		vy = 0;
 		ax = 0;
 		ay = 0;
+		break;
+
+	case PARA_KOOPAS_STATE_FLY:
+		
+		if (type == PARA_KOOPAS_TYPE_GREEN)
+		{
+			vy = -PARA_KOOPAS_FLY_SPEED;
+			vx = nx * KOOPAS_WALKING_SPEED;
+			isBeingHeld = false;
+		}
 		break;
 	}
 }

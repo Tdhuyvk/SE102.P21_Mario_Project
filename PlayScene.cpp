@@ -37,6 +37,9 @@
 // include Wood.h
 #include "Wood.h"
 
+// include ParaKoopas.h
+#include "ParaKoopas.h"
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -164,6 +167,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		Koopastype = atoi(tokens[3].c_str());
 
 		obj = new CKoopas(x, y, Koopastype);
+		break;
+	}
+
+	case OBJECT_TYPE_PARA_KOOPAS:
+	{
+		if (tokens.size() < 4)
+		{
+			DebugOut(L"[ERROR] Para Koopas object format invalid!\n");
+			return;
+		}
+
+		int ParaKoopastype;
+		float x = (float)atof(tokens[1].c_str());
+		float y = (float)atof(tokens[2].c_str());
+		ParaKoopastype = atoi(tokens[3].c_str());
+
+		obj = new CParaKoopas(x, y, ParaKoopastype);
 		break;
 	}
 
