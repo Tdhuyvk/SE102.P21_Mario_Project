@@ -81,6 +81,8 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (dynamic_cast<CMario*>(e->obj)) return;
+	
 	if (!e->obj->IsBlocking()) return;
 
 	if (e->ny != 0)
@@ -93,19 +95,6 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (e->nx != 0)
 	{
-		/*if (state == KOOPAS_STATE_WALKING || state == KOOPAS_STATE_SHELL_MOVING || state == KOOPAS_STATE_REVIVING)
-		{
-			if (state == KOOPAS_STATE_SHELL_MOVING)
-			{
-				vx = -vx;
-			}
-			else
-			{
-				vx = -vx;
-				SetNx(-GetNx());
-			}
-		}*/
-
 		vx = -vx;
 		nx = -nx;
 	}
