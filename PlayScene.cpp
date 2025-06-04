@@ -430,7 +430,30 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	// Get Mario instance to check flying state
+	CMario* mario = dynamic_cast<CMario*>(player);
+	float camY = cy; // Always follow Mario vertically by default
+
+	// Enhanced vertical tracking when Mario is flying as Raccoon Mario
+	if (mario && mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->IsFlying())
+	{
+		// When flying, follow Mario more closely
+		camY = cy;
+	}
+	else
+	{
+		// Normal vertical tracking - keep camera centered on Mario with boundaries
+		// Prevent camera from showing too much below the ground
+		float maxCamY = 240.0f - game->GetBackBufferHeight();
+		if (camY > maxCamY) camY = maxCamY;
+
+		// Prevent camera from showing above the sky
+		if (camY < 0) camY = 0;
+	}
+
+	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+
+	CGame::GetInstance()->SetCamPos(cx, camY);
 
 	PurgeDeletedObjects();
 

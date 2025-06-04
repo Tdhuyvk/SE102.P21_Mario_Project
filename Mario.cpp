@@ -53,6 +53,41 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isKicking = false;
 	}
 
+	// reset isTailAttacking after MARIO_TAIL_ATTACK_TIME
+	if (isTailAttacking && GetTickCount64() - tail_attack_start > MARIO_TAIL_ATTACK_TIME) {
+		isTailAttacking = false;
+	}
+
+	// Extended shell pickup range - scan for nearby shells if not already holding one
+	if (!isHolding && state == MARIO_STATE_HOLD && coObjects != NULL) {
+		for (size_t i = 0; i < coObjects->size(); i++) {
+			CKoopas* koopa = dynamic_cast<CKoopas*>(coObjects->at(i));
+			if (koopa && koopa->IsInShell() && !koopa->IsBeingHeld()) {
+				// Check if shell is within extended pickup range
+				if (IsShellWithinPickupRange(koopa)) {
+					DebugOut(L"Extended pickup range: Found shell to pick up!\n");
+					HoldKoopas(koopa);
+					break; // Only pick up one shell at a time
+				}
+			}
+		}
+	}
+
+	// Flying height tracking for Raccoon Mario camera system
+	if (level == MARIO_LEVEL_RACCOON) {
+		// Track the highest point reached during flight/jumping for camera tracking
+		if (isFlying || (!isOnPlatform && vy < 0)) {
+			// Update flyingMaxHeight to track the highest point reached
+			if (y < flyingMaxHeight || flyingMaxHeight == 0.0f) {
+				flyingMaxHeight = y;
+			}
+		}
+		// Reset flying height when Mario returns to ground level naturally
+		else if (isOnPlatform && y > flyingMaxHeight + 40.0f) {
+			flyingMaxHeight = y;  // Reset to current ground level
+		}
+	}
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
@@ -68,7 +103,12 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
+		if (e->ny < 0) {
+			isOnPlatform = true;
+
+			// Reset flying state when Mario lands on a platform
+			isFlying = false;
+		}
 	}
 	else 
 	if (e->nx != 0 && e->obj->IsBlocking())
@@ -113,7 +153,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		{
 			if (goomba->GetState() != GOOMBA_STATE_DIE)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (isTailAttacking && level == MARIO_LEVEL_RACCOON)
+				{
+					// Hit with tail attack
+					goomba->SetState(GOOMBA_STATE_DIE);
+				}
+				else if (level > MARIO_LEVEL_SMALL)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -211,7 +256,12 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		{
 			if (untouchable == 0)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (isTailAttacking && level == MARIO_LEVEL_RACCOON)
+				{
+					// Hit with tail attack - convert to shell
+					koopa->SetState(KOOPAS_STATE_DIE);
+				}
+				else if (level > MARIO_LEVEL_SMALL)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -225,24 +275,42 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 		else if (koopa->GetState() == KOOPAS_STATE_DIE) // Stationary shell
 		{
-			// Check if running button is held
-			if (isHolding)
+			//// Check if running button is held
+			//if (isHolding)
+			//{
+			//	// Pickup and hold the shell
+			//	HoldKoopas(koopa);
+			//}
+			//else
+			//{
+			//	// Kick the shell
+			//	koopa->SetNx(this->nx); // Set direction based on Mario's direction
+			//	koopa->SetState(KOOPAS_STATE_SHELL_MOVING);
+			//}
+
+			if (isTailAttacking && level == MARIO_LEVEL_RACCOON)
 			{
-				// Pickup and hold the shell
-				HoldKoopas(koopa);
-			}
-			else
-			{
-				// Kick the shell
-				koopa->SetNx(this->nx); // Set direction based on Mario's direction
+				// Hit with tail attack - kick the shell
+				koopa->SetNx(this->nx);
 				koopa->SetState(KOOPAS_STATE_SHELL_MOVING);
+			}
+			else if (state == MARIO_STATE_HOLD)
+			{
+				// User is pressing the hold key and collided with shell - pick it up
+				DebugOut(L"Mario picking up Koopa shell on collision\n");
+				HoldKoopas(koopa);
 			}
 		}
 		else if (koopa->GetState() == KOOPAS_STATE_SHELL_MOVING) // Moving shell
 		{
 			if (untouchable == 0)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (isTailAttacking && level == MARIO_LEVEL_RACCOON)
+				{
+					// Hit with tail attack - stop the shell
+					koopa->SetState(KOOPAS_STATE_DIE);
+				}
+				else if (level > MARIO_LEVEL_SMALL)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -257,7 +325,8 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		else if (koopa->GetState() == KOOPAS_STATE_REVIVING) // Reviving shell
 		{
 			// Same as stationary shell
-			if (isHolding)
+			//if (isHolding)
+			if (state == MARIO_STATE_HOLD)
 			{
 				// Pickup and hold the shell - this interrupts revival
 				koopa->SetState(KOOPAS_STATE_DIE); // Reset to shell state first
@@ -426,12 +495,26 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRaccoon()
 {
 	int aniId = -1;
-	if (!isOnPlatform)
+	if (isTailAttacking)
+	{
+		aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_TAIL_ATTACK_RIGHT : ID_ANI_MARIO_RACCOON_TAIL_ATTACK_LEFT;
+	}
+	else if (!isOnPlatform)
 	{
 		if (isHolding)
 		{
 			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_HOLD_RIGHT_JUMP : ID_ANI_MARIO_RACCOON_HOLD_LEFT_JUMP;
 		}
+		//
+		else if (isWagging)
+		{
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_TAIL_WAGGING_RIGHT : ID_ANI_MARIO_RACCOON_TAIL_WAGGING_LEFT;
+		}
+		else if (isFlying)
+		{
+			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_FLY_TAIL_WAGGING_RIGHT : ID_ANI_MARIO_RACCOON_FLY_TAIL_WAGGING_LEFT;
+		}
+		//
 		else if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
 			aniId = (nx > 0) ? ID_ANI_MARIO_RACCOON_JUMP_RUN_RIGHT : ID_ANI_MARIO_RACCOON_JUMP_RUN_LEFT;
@@ -464,7 +547,7 @@ int CMario::GetAniIdRaccoon()
 			aniId = ID_ANI_MARIO_RACCOON_BRACE_RIGHT;
 		else if (ax == MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_RACCOON_RUNNING_RIGHT;
-		else
+		else if (ax == MARIO_ACCEL_WALK_X)
 			aniId = ID_ANI_MARIO_RACCOON_WALKING_RIGHT;
 	}
 	else // vx < 0
@@ -477,35 +560,81 @@ int CMario::GetAniIdRaccoon()
 			aniId = ID_ANI_MARIO_RACCOON_BRACE_LEFT;
 		else if (ax == -MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_RACCOON_RUNNING_LEFT;
-		else
+		else if (ax == -MARIO_ACCEL_WALK_X)
 			aniId = ID_ANI_MARIO_RACCOON_WALKING_LEFT;
 	}
 	if (aniId == -1) aniId = ID_ANI_MARIO_RACCOON_IDLE_RIGHT;
 	return aniId;
 }
 
+//void CMario::Render()
+//{
+//	CAnimations* animations = CAnimations::GetInstance();
+//	int aniId = -1;
+//
+//	if (state == MARIO_STATE_DIE)
+//		aniId = ID_ANI_MARIO_DIE;
+//	
+//	// raccoon
+//	else if (level == MARIO_LEVEL_RACCOON)
+//		aniId = GetAniIdRaccoon();
+//
+//	else if (level == MARIO_LEVEL_BIG)
+//		aniId = GetAniIdBig();
+//	else if (level == MARIO_LEVEL_SMALL)
+//		aniId = GetAniIdSmall();
+//
+//	animations->Get(aniId)->Render(x, y);
+//
+//	//RenderBoundingBox();
+//	
+//	DebugOutTitle(L"Coins: %d", coin);
+//}
+
 void CMario::Render()
 {
-	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
 
 	if (state == MARIO_STATE_DIE)
 		aniId = ID_ANI_MARIO_DIE;
-	
-	// raccoon
-	else if (level == MARIO_LEVEL_RACCOON)
-		aniId = GetAniIdRaccoon();
-
 	else if (level == MARIO_LEVEL_BIG)
 		aniId = GetAniIdBig();
 	else if (level == MARIO_LEVEL_SMALL)
 		aniId = GetAniIdSmall();
+	else if (level == MARIO_LEVEL_RACCOON)
+		aniId = GetAniIdRaccoon();
 
-	animations->Get(aniId)->Render(x, y);
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	RenderBoundingBox();    // Visualize shell pickup range when F key is pressed (state == MARIO_STATE_HOLD)
+	if (state == MARIO_STATE_HOLD && !isHolding) {
+		// Draw visual indicators for shells in pickup range
+		LPPLAYSCENE scene = (LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene();
+		vector<LPGAMEOBJECT>& objects = scene->GetObjects();
+		for (size_t i = 0; i < objects.size(); i++) {
+			CKoopas* koopa = dynamic_cast<CKoopas*>(objects.at(i));
+			if (koopa && koopa->IsInShell() && !koopa->IsBeingHeld()) {
+				if (IsShellWithinPickupRange(koopa)) {
+					// Draw a visual indicator above the shell
+					float koopa_x = koopa->GetX();
+					float koopa_y = koopa->GetY();
 
-	//RenderBoundingBox();
-	
-	DebugOutTitle(L"Coins: %d", coin);
+					// Draw a simple indicator above the shell using bounding box texture
+					float cx, cy;
+					CGame::GetInstance()->GetCamPos(cx, cy);
+
+					// Draw a highlighted square above the shell
+					CGame::GetInstance()->Draw(
+						koopa_x - cx,
+						koopa_y - 20 - cy,
+						CTextures::GetInstance()->Get(ID_TEX_BBOX),
+						nullptr,
+						0.8f,  // Higher alpha to make it more visible
+						16, 8  // Small rectangle above the shell
+					);
+				}
+			}
+		}
+	}
 }
 
 void CMario::SetState(int state)
@@ -547,11 +676,38 @@ void CMario::SetState(int state)
 				vy = -MARIO_JUMP_RUN_SPEED_Y;
 			else
 				vy = -MARIO_JUMP_SPEED_Y;
+
+			// Set flying height tracking for Raccoon Mario
+			if (level == MARIO_LEVEL_RACCOON) {
+				flyingMaxHeight = y;  // Record starting height for camera tracking
+			}
+		}
+		else if (level == MARIO_LEVEL_RACCOON)
+		{
+			if (abs(this->vx) == MARIO_RUNNING_SPEED)
+			{
+				// Flying for raccoon Mario
+				isFlying = true;
+				vy = -MARIO_JUMP_RUN_SPEED_Y;
+				flyingMaxHeight = y;  // Record starting height for camera tracking
+			}
+			else
+			{
+				// Wagging tail to slow fall
+				isWagging = true;
+				vy = -MARIO_JUMP_SPEED_Y / 3;
+				flyingMaxHeight = y;  // Record starting height for camera tracking
+			}
 		}
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
 		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
+
+		// Don't reset flying state immediately - let Update() method handle it
+		// based on Mario's position relative to his max flying height
+		isWagging = false;
+
 		break;
 
 	// state kick
@@ -562,7 +718,18 @@ void CMario::SetState(int state)
 
 	// state hold
 	case MARIO_STATE_HOLD:
-		isHolding = true;
+		//isHolding = true;
+		
+		// Don't set isHolding=true here, as this would prevent picking up shells
+		// isHolding is set to true only after successfully picking up a shell in HoldKoopas()
+		DebugOut(L"Mario HOLD state activated\n");
+
+		// Check for nearby shells if Mario doesn't already hold one
+		if (!isHolding) {
+			// We'll scan for nearby shells in the Update method
+			// This flag will be used there
+		}
+
 		break;
 
 	case MARIO_STATE_RELEASE_HOLD:
@@ -599,6 +766,14 @@ void CMario::SetState(int state)
 		vx = 0.0f;
 		break;
 
+	// case tail attack
+	case MARIO_STATE_TAIL_ATTACK:
+		if (level == MARIO_LEVEL_RACCOON) {
+			isTailAttacking = true;
+			tail_attack_start = GetTickCount64();
+		}
+		break;
+
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;
@@ -614,10 +789,29 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	// raccoon mario
 	if (level == MARIO_LEVEL_RACCOON)
 	{
-		left = x - MARIO_RACCOON_BBOX_WIDTH / 2;
-		top = y - MARIO_RACCOON_BBOX_HEIGHT / 2;
-		right = left + MARIO_RACCOON_BBOX_WIDTH;
-		bottom = top + MARIO_RACCOON_BBOX_HEIGHT;
+		if (isTailAttacking)
+		{
+			// Wider bbox when tail attacking
+			if (nx > 0) {
+				left = x - MARIO_RACCOON_BBOX_WIDTH / 2;
+				top = y - MARIO_RACCOON_BBOX_HEIGHT / 2;
+				right = left + MARIO_RACCOON_TAIL_ATTACK_WIDTH;
+				bottom = top + MARIO_RACCOON_BBOX_HEIGHT;
+			}
+			else {
+				right = x + MARIO_RACCOON_BBOX_WIDTH / 2;
+				top = y - MARIO_RACCOON_BBOX_HEIGHT / 2;
+				left = right - MARIO_RACCOON_TAIL_ATTACK_WIDTH;
+				bottom = top + MARIO_RACCOON_BBOX_HEIGHT;
+			}
+		}
+		else
+		{
+			left = x - MARIO_RACCOON_BBOX_WIDTH / 2;
+			top = y - MARIO_RACCOON_BBOX_HEIGHT / 2;
+			right = left + MARIO_RACCOON_BBOX_WIDTH;
+			bottom = top + MARIO_RACCOON_BBOX_HEIGHT;
+		}
 	}
 
 	else if (level==MARIO_LEVEL_BIG)
@@ -664,11 +858,21 @@ void CMario::HoldKoopas(CKoopas* koopa)
 
 	if (koopa->IsInShell())
 	{
+		// Debug output to confirm method is called
+		DebugOut(L"Mario is picking up Koopa shell at (%.2f, %.2f)\n", koopa->GetX(), koopa->GetY());
+
 		isHolding = true;
 		heldKoopas = koopa;
 		heldKoopas->SetBeingHeld(true);
 		heldKoopas->SetHoldingMario(this);
 		heldKoopas->SetState(KOOPAS_STATE_BEING_HELD);
+
+		// Play a sound effect here if you have one for picking up shells
+		// CAudio::GetInstance()->Play("pickup_shell");
+	}
+	else
+	{
+		DebugOut(L"Cannot pick up Koopa that isn't in shell state\n");
 	}
 }
 
@@ -677,10 +881,53 @@ void CMario::ReleaseKoopas()
 	if (!isHolding || !heldKoopas)
 		return;
 
+	// Debug output for shell release
+	DebugOut(L"Mario releasing shell, direction: %d\n", nx);
+
 	// Release the shell - this will launch it in the direction Mario is facing
 	isHolding = false;
 
 	// Pass Mario's nx to the shell's Release method which will set proper velocity
 	heldKoopas->Release();
 	heldKoopas = NULL;
+}
+
+bool CMario::IsShellWithinPickupRange(CKoopas* koopa)
+{
+	if (!koopa || !koopa->IsInShell()) return false;
+
+	float koopa_x = koopa->GetX();
+	float koopa_y = koopa->GetY();
+	float mario_x = this->x;
+	float mario_y = this->y;
+
+	// Calculate distance between Mario and Koopa
+	float dx = abs(mario_x - koopa_x);
+	float dy = abs(mario_y - koopa_y);
+
+	// Get Mario's bounding box width based on level
+	float mario_width = 0;
+	if (level == MARIO_LEVEL_SMALL)
+		mario_width = MARIO_SMALL_BBOX_WIDTH;
+	else if (level == MARIO_LEVEL_BIG)
+		mario_width = MARIO_BIG_BBOX_WIDTH;
+	else if (level == MARIO_LEVEL_RACCOON)
+		mario_width = MARIO_RACCOON_BBOX_WIDTH;
+
+	// Get Koopa's width
+	float koopa_width = KOOPAS_BBOX_WIDTH;
+
+	// Calculate horizontal distance considering half width of each object
+	// plus the extended pickup range
+	float pickup_distance = (mario_width + koopa_width) / 2 + MARIO_SHELL_PICKUP_RANGE;
+
+	// Check if Koopa is within horizontal pickup range and vertically close
+	// The vertical threshold is more forgiving - we use 24 pixels (approximately the height of big Mario)
+	if (dx <= pickup_distance && dy <= 24) {
+		DebugOut(L"Shell is within extended pickup range! Distance: %.2f (limit: %.2f)\n",
+			dx, pickup_distance);
+		return true;
+	}
+
+	return false;
 }

@@ -34,6 +34,12 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_R: // reset
 		//Reload();
 		break;
+
+	case DIK_A:
+		if (mario->GetLevel() == MARIO_LEVEL_RACCOON)
+			mario->SetState(MARIO_STATE_TAIL_ATTACK);
+		mario->SetState(MARIO_STATE_HOLD);
+		break;
 	}
 }
 
@@ -49,20 +55,21 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
+		break;	
+
+	case DIK_A:
+		mario->SetState(MARIO_STATE_RELEASE_HOLD);
 		break;
 	}
 }
 
-void CSampleKeyHandler::KeyState(BYTE *states)
+void CSampleKeyHandler::KeyState(BYTE* states)
 {
 	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
-
-	// handle A key for shell interaction
-	if (game->IsKeyDown(DIK_A)) {
-		mario->SetState(MARIO_STATE_HOLD);
-	}
-	else {
+	// Only release the held item if Mario is holding something and F key is released
+// This ensures Mario doesn't constantly drop what he's holding
+	if (mario->IsHolding() && !game->IsKeyDown(DIK_A)) {
 		mario->SetState(MARIO_STATE_RELEASE_HOLD);
 	}
 

@@ -24,12 +24,12 @@ resources\wood.txt
 
 # BRICKS
 #1	0	0
-1	224	160
+#1	224	160
 
 # WOOD
 #15	224	160
 
-15	0	0
+#15	0	0
 
 #COIN
 4	1072	80
@@ -288,4 +288,4 @@ resources\wood.txt
 3	592	48	1
 
 #Para Koopas
-16	224	144	3
+16	124	144	3

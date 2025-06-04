@@ -81,7 +81,7 @@ void CKoopas::OnNoCollision(DWORD dt)
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (dynamic_cast<CMario*>(e->obj)) return;
+	/*if (dynamic_cast<CMario*>(e->obj)) return;
 	
 	if (!e->obj->IsBlocking()) return;
 
@@ -97,8 +97,10 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 		nx = -nx;
-	}
+	}*/
 	
+	if (dynamic_cast<CMario*>(e->obj)) return;
+
 	if (state == KOOPAS_STATE_BEING_HELD) return;
 
 	if (dynamic_cast<CGoomba*>(e->obj))
@@ -112,6 +114,30 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CPlatform*>(e->obj))
 		OnCollisionWithPlatform(e);
 
+	//
+	if (!e->obj->IsBlocking()) return;
+
+	if (e->ny != 0)
+	{
+		vy = 0;
+
+		if (e->ny < 0) isOnPlatform = true;
+	}
+	else if (e->nx != 0)
+	{
+		if (state == KOOPAS_STATE_WALKING || state == KOOPAS_STATE_SHELL_MOVING || state == KOOPAS_STATE_REVIVING)
+		{
+			if (state == KOOPAS_STATE_SHELL_MOVING)
+			{
+				vx = -vx;
+			}
+			else
+			{
+				vx = -vx;
+				SetNx(-GetNx());
+			}
+		}
+	}
 }
 
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -197,6 +223,7 @@ void CKoopas::OnCollisionWithPlatform(LPCOLLISIONEVENT e) {
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	//isOnPlatform = false;
 
 	if (state == KOOPAS_STATE_BEING_HELD)
 	{
@@ -209,8 +236,18 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			marioY = holdingMario->GetY();
 			marioDirection = holdingMario->GetNx();
 
-			x = marioX + marioDirection * 12;
-			y = marioY - 2;
+			/*x = marioX + marioDirection * 12;
+			y = marioY - 2;*/
+
+			// Position the koopa shell relative to Mario based on Mario's level
+			if (holdingMario->GetLevel() == MARIO_LEVEL_SMALL) {
+				x = marioX + marioDirection * 10;
+				y = marioY - 1;
+			}
+			else {
+				x = marioX + marioDirection * 12;
+				y = marioY - 2;
+			}
 
 			if (GetTickCount64() - hold_start > KOOPAS_BEING_HELD_TIMEOUT)
 			{
@@ -270,11 +307,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CCollision::GetInstance()->Process(this, dt, coObjects);
 	}
 
-	vy += ay * dt;
+	/*vy += ay * dt;
 	vx += ax * dt;
 
 	if (!isBeingHeld)
-		CCollision::GetInstance()->Process(this, dt, coObjects);
+		CCollision::GetInstance()->Process(this, dt, coObjects);*/
 
 	
 	if (type == PARA_KOOPAS_TYPE_GREEN && state == PARA_KOOPAS_STATE_FLY)

@@ -46,6 +46,10 @@ class CKoopas;
 // define kick
 #define MARIO_STATE_KICK			800
 
+// define tail attack
+#define MARIO_STATE_TAIL_ATTACK     900
+
+
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -171,6 +175,15 @@ class CKoopas;
 #define MARIO_RACCOON_BBOX_WIDTH  20
 #define MARIO_RACCOON_BBOX_HEIGHT 26
 
+#define MARIO_RACCOON_TAIL_ATTACK_WIDTH 28
+
+#define MARIO_TAIL_ATTACK_TIME 350
+
+// Extended pickup range for shell pickups
+#define MARIO_SHELL_PICKUP_RANGE 20  // Pixels of extra range for shell pickup
+
+// For automatic testing of shell pickup/release
+#define MARIO_AUTO_SHELL_HOLD_TIME 3000
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
@@ -194,6 +207,14 @@ class CMario : public CGameObject
 	// kick
 	BOOLEAN isKicking;
 	ULONGLONG kick_start;
+
+	// raccoon tail attack
+	BOOLEAN isTailAttacking;
+	ULONGLONG tail_attack_start;
+	// raccoon flying/floating
+	BOOLEAN isFlying;
+	BOOLEAN isWagging;
+	float flyingMaxHeight;  // Track the highest point while flying for camera tracking
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -241,6 +262,14 @@ public:
 		// kick
 		isKicking = false;
 		kick_start = 0;
+
+		// tail attack
+		isTailAttacking = false;
+		tail_attack_start = 0;
+		// raccoon flying/floating
+		isFlying = false;
+		isWagging = false;
+		flyingMaxHeight = 0.0f;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
@@ -257,6 +286,9 @@ public:
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	void SetLevel(int l);
+
+	int GetLevel() { return level; } // Add GetLevel() method
+
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -264,4 +296,11 @@ public:
 	void HoldKoopas(CKoopas* koopas);
 	void ReleaseKoopas();
 	bool IsHolding() { return isHolding; }
+
+	// raccoon
+
+	bool IsTailAttacking() { return isTailAttacking; }
+	bool IsFlying() { return isFlying; }  // Check if Mario is in flying state
+	bool IsAirborneRaccoon() { return level == MARIO_LEVEL_RACCOON && (isFlying || (!isOnPlatform && y < flyingMaxHeight + 20.0f)); }  // For camera tracking
+	bool IsShellWithinPickupRange(CKoopas* koopa);  // Check if shell is within extended pickup range
 };
