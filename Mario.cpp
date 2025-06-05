@@ -124,8 +124,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CKoopas*>(e->obj)) // collision with koopas
 		OnCollisionWithKoopas(e);
-	else if (dynamic_cast<CParaKoopas*>(e->obj)) // collision with para koopas
-		OnCollisionWithParaKoopas(e);
+	//else if (dynamic_cast<CParaKoopas*>(e->obj)) // collision with para koopas
+	//	OnCollisionWithParaKoopas(e);
 	else if (dynamic_cast<CMushroom*>(e->obj)) // collision with mushroom
 		OnCollisionWithMushroom(e);
 	else if (dynamic_cast<CSuperLeaf*>(e->obj))
@@ -224,6 +224,16 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 	// Jump on top >> convert Koopa to shell or interact with shell
 	if (e->ny < 0)
 	{
+		if (dynamic_cast<CParaKoopas*>(e->obj))
+		{
+			if (koopa->GetState() == PARA_KOOPAS_STATE_FLY)
+			{
+				koopa->SetState(KOOPAS_STATE_WALKING);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+				return;
+			}
+		}
+
 		if (koopa->GetState() == KOOPAS_STATE_WALKING)
 		{
 			// Convert to shell
@@ -340,11 +350,6 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			}
 		}
 	}
-}
-
-void CMario::OnCollisionWithParaKoopas(LPCOLLISIONEVENT e)
-{
-	//
 }
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
