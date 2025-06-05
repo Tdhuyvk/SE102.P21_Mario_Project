@@ -49,12 +49,14 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 {
 	player = NULL;
 	key_handler = new CSampleKeyHandler(this);
+	isCamYPosAdjust = FALSE;
 }
 
 
 #define SCENE_SECTION_UNKNOWN -1
 #define SCENE_SECTION_ASSETS	1
 #define SCENE_SECTION_OBJECTS	2
+#define SCENE_SECTION_BOUNDARIES 3
 
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
@@ -331,6 +333,43 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	objects.push_back(obj);
 }
 
+void CPlayScene::_ParseSection_BOUNDARIES(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 5) return; // Invalid format
+
+	int type = atoi(tokens[0].c_str());
+	int left = atoi(tokens[1].c_str());
+	int top = atoi(tokens[2].c_str());
+	int right = atoi(tokens[3].c_str());
+	int bottom = atoi(tokens[4].c_str());
+
+	if (type == 0) // Main boundary
+	{
+		mainBoundary.left = left;
+		mainBoundary.top = top;
+		mainBoundary.right = right;
+		mainBoundary.bottom = bottom;
+		currentBoundary = mainBoundary;
+	}
+	else // Hidden map boundary
+	{
+		Boundary hiddenBoundary;
+		hiddenBoundary.left = left;
+		hiddenBoundary.top = top;
+		hiddenBoundary.right = right;
+		hiddenBoundary.bottom = bottom;
+
+		// Ensure vector is large enough
+		while (hiddenMapBoundary.size() <= type)
+		{
+			hiddenMapBoundary.push_back(Boundary());
+		}
+		hiddenMapBoundary[type] = hiddenBoundary;
+	}
+}
+
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
 {
 	DebugOut(L"[INFO] Start loading assets from : %s \n", assetFile);
@@ -380,10 +419,10 @@ void CPlayScene::Load()
 	while (f.getline(str, MAX_SCENE_LINE))
 	{
 		string line(str);
-
 		if (line[0] == '#') continue;	// skip comment lines	
 		if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
 		if (line == "[OBJECTS]") { section = SCENE_SECTION_OBJECTS; continue; };
+		if (line == "[BOUNDARIES]") { section = SCENE_SECTION_BOUNDARIES; continue; }
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
@@ -393,12 +432,71 @@ void CPlayScene::Load()
 		{
 		case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
 		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		case SCENE_SECTION_BOUNDARIES: _ParseSection_BOUNDARIES(line); break;
 		}
 	}
 
 	f.close();
 
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
+}
+
+void CPlayScene::AdjustCamPos()
+{
+	CMario* mario = dynamic_cast<CMario*>(player);
+
+	// Skip camera adjustment during pipe entrance
+	/*if (mario->GetState() == MARIO_STATE_PIPE_ENTRANCE)
+		return;*/
+
+	float cx, cy;
+	mario->GetPosition(cx, cy);
+
+	CGame* game = CGame::GetInstance();
+	cx -= game->GetBackBufferWidth() / 2;
+	cy -= game->GetBackBufferHeight() / 2;
+	float s_width = (float)game->GetBackBufferWidth();
+	float s_height = (float)game->GetBackBufferHeight();
+
+	// Horizontal boundaries
+	if (cx < currentBoundary.left * GRID_SIZE) cx = currentBoundary.left * GRID_SIZE;
+	if (cx > currentBoundary.right * GRID_SIZE + GRID_SIZE - s_width)
+		cx = currentBoundary.right * GRID_SIZE + GRID_SIZE - s_width;
+
+	// Top boundary
+	if (cy < currentBoundary.top * GRID_SIZE)
+		cy = currentBoundary.top * GRID_SIZE;
+
+	// Vertical camera behavior - different logic for flying vs grounded Mario
+	if (!mario->IsFlying())
+	{
+		if (!isCamYPosAdjust)
+		{
+			// Normal ground-based camera behavior
+			if (cy > currentBoundary.bottom * GRID_SIZE - s_height - s_height / 2 - GRID_SIZE * 2)
+				cy = currentBoundary.bottom * GRID_SIZE - s_height;
+		}
+		else
+		{
+			// Adjusted camera behavior for elevated platforms
+			if (cy > currentBoundary.bottom * GRID_SIZE - s_height)
+			{
+				cy = currentBoundary.bottom * GRID_SIZE - s_height;
+				isCamYPosAdjust = FALSE;
+			}
+		}
+	}
+	else
+	{
+		// Flying Mario camera behavior
+		if (cy > currentBoundary.bottom * GRID_SIZE - s_height)
+			cy = currentBoundary.bottom * GRID_SIZE - s_height;
+		else {
+			isCamYPosAdjust = TRUE;
+		}
+	}
+
+	CGame::GetInstance()->SetCamPos(cx, cy);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -411,49 +509,18 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
-
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
 
+	// Use the new camera tracking system
+	AdjustCamPos();
+
+	CMario* mario = dynamic_cast<CMario*>(player);
+
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
-
-	// Update camera to follow mario
-	float cx, cy;
-	player->GetPosition(cx, cy);
-
-	CGame* game = CGame::GetInstance();
-	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
-
-	if (cx < 0) cx = 0;
-
-	// Get Mario instance to check flying state
-	CMario* mario = dynamic_cast<CMario*>(player);
-	float camY = cy; // Always follow Mario vertically by default
-
-	// Enhanced vertical tracking when Mario is flying as Raccoon Mario
-	if (mario && mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->IsFlying())
-	{
-		// When flying, follow Mario more closely
-		camY = cy;
-	}
-	else
-	{
-		// Normal vertical tracking - keep camera centered on Mario with boundaries
-		// Prevent camera from showing too much below the ground
-		float maxCamY = 240.0f - game->GetBackBufferHeight();
-		if (camY > maxCamY) camY = maxCamY;
-
-		// Prevent camera from showing above the sky
-		if (camY < 0) camY = 0;
-	}
-
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-
-	CGame::GetInstance()->SetCamPos(cx, camY);
 
 	PurgeDeletedObjects();
 

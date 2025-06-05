@@ -288,4 +288,9 @@ resources\wood.txt
 3	592	48	1
 
 #Para Koopas
-16	124	144	3
+16	200	144	3
+
+[BOUNDARIES]
+# Main map boundary: type(0=main), left, top, right, bottom (in grid units)
+0	0	-15	200	15
+

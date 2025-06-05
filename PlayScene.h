@@ -23,6 +23,14 @@
 // include Mushroom.h
 #include "Mushroom.h"
 
+// Add boundary structure for camera tracking
+struct Boundary {
+	int left;
+	int top;
+	int right;
+	int bottom;
+};
+
 class CPlayScene: public CScene
 {
 protected: 
@@ -31,13 +39,24 @@ protected:
 
 	vector<LPGAMEOBJECT> objects;
 
+	// Camera tracking variables
+	Boundary currentBoundary;
+	Boundary mainBoundary;
+	vector<Boundary> hiddenMapBoundary;
+	BOOLEAN isCamYPosAdjust;
+
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 
 	void _ParseSection_ASSETS(string line);
 	void _ParseSection_OBJECTS(string line);
 
+	void _ParseSection_BOUNDARIES(string line);
+
 	void LoadAssets(LPCWSTR assetFile);
+
+	// Camera adjustment method
+	void AdjustCamPos();
 	
 public: 
 	CPlayScene(int id, LPCWSTR filePath);

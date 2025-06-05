@@ -50,6 +50,9 @@
 // define para goomba
 #define OBJECT_TYPE_PARA_GOMBA 17
 
+// grid as unit
+#define GRID_SIZE 16
+
 #define OBJECT_TYPE_PORTAL	50
 
 
