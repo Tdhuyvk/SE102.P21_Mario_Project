@@ -65,6 +65,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (scene->IsFallOff(y))
 	{
 		//Reset();
+
 		return;
 	}
 
