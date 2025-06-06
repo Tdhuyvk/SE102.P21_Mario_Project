@@ -33,6 +33,11 @@ CKoopas::CKoopas(float x, float y, int type) :CGameObject(x, y), type(type)
 
 	this->nx = -1; // Default to moving left
 
+	// set default position
+	SetDefaultPosition(x, y);
+	isActived = false;
+	trigger = TRIGGER_READY;
+
 	isBlockByPlatform = (type == KOOPAS_TYPE_RED);
 	if (isBlockByPlatform) {
 		platformChecker = new CPlatformChecker(
@@ -80,25 +85,7 @@ void CKoopas::OnNoCollision(DWORD dt)
 };
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-	/*if (dynamic_cast<CMario*>(e->obj)) return;
-	
-	if (!e->obj->IsBlocking()) return;
-
-	if (e->ny != 0)
-	{
-		vy = 0;
-
-		if (e->ny < 0) {
-			isOnPlatform = true;
-		}
-	}
-	else if (e->nx != 0)
-	{
-		vx = -vx;
-		nx = -nx;
-	}*/
-	
+{	
 	if (dynamic_cast<CMario*>(e->obj)) return;
 
 	if (state == KOOPAS_STATE_BEING_HELD) return;
@@ -225,7 +212,46 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//isOnPlatform = false;
 
-	if (state == KOOPAS_STATE_BEING_HELD)
+	CGame* game = CGame::GetInstance();
+	CPlayScene* scene = (CPlayScene*)game->GetCurrentScene();
+
+	// check reset if fall off screen
+	if (scene->IsFallOff(y))
+	{
+		//Reset();
+		if (dynamic_cast<CParaKoopas*>(this))
+			SetState(PARA_KOOPAS_STATE_FLY);
+		else
+			SetState(KOOPAS_STATE_WALKING);
+		return;
+	}
+
+	// active based of cam
+	if (!game->IsCamEnter(def_x, def_y)) {
+		if (!isActived)
+		{
+			trigger = TRIGGER_READY;
+			// set moving direction based of cam
+			if (game->IsRightSideOfCam(def_x))
+				vx = -KOOPAS_WALKING_SPEED;
+			else
+				vx = KOOPAS_WALKING_SPEED;
+		}
+	}
+	else if (trigger == TRIGGER_READY)
+	{
+		trigger = TRIGGER_ACTIVE;
+	}
+
+	// active enemy
+	if (!isActived && trigger == TRIGGER_ACTIVE)
+	{
+		isActived = true;
+		trigger = TRIGGER_IGNORE;
+	}
+
+	//
+	if (state == KOOPAS_STATE_BEING_HELD || !isActived)
 	{
 		if (holdingMario != NULL)
 		{
@@ -254,10 +280,14 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				Release();
 			}
 		}
-		else
+		else if (state == KOOPAS_STATE_BEING_HELD && holdingMario == NULL)
 		{
 			SetState(KOOPAS_STATE_DIE);
 		}
+
+		// Skip the rest of the update if not activated
+		if (!isActived)
+			return;
 	}
 	else
 	{
@@ -328,6 +358,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopas::Render()
 {
+
+	if (!isActived) return;
+
 	int aniId = -1;
 
 	if (type == KOOPAS_TYPE_GREEN)

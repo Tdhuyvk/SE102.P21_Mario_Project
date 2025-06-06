@@ -9,6 +9,8 @@ void CParaKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
     CKoopas::Update(dt, coObjects);
 
+    if (!isActived) return;
+
     if (state == PARA_KOOPAS_STATE_FLY)
     {
         if (isOnPlatform)
@@ -21,6 +23,8 @@ void CParaKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CParaKoopas::Render()
 {
+    if (!isActived) return;
+
     int aniId = -1;
     if (state == PARA_KOOPAS_STATE_FLY)
     {

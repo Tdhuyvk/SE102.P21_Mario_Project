@@ -60,7 +60,8 @@ resources\wood.txt
 #Platform
 #5	90	136	16	15	16	51000	52000	53000
 
-#5	0	0	16	16	16	55000	55000	55000
+5	0	0	16	16	16	55000	55000	55000
+
 
 
 #Pipe
@@ -279,7 +280,7 @@ resources\wood.txt
 #Goomba
 #2	224	144
 
-2	324	144
+#2	324	144
 
 #2	992	0
 #2	1024	0
@@ -287,10 +288,11 @@ resources\wood.txt
 
 #Koopas
 #3	350	100
+3	324	144	2
 3	592	48	1
 
 #Para Koopas
-#16	200	144	3
+16	700	144	3
 
 [BOUNDARIES]
 # Main map boundary: type(0=main), left, top, right, bottom (in grid units)
