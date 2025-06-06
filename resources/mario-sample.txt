@@ -26,3 +26,4 @@ height	768
 40	textures\misc_1.png
 50	textures\enimies-1.png
 60	textures\font.png
+70	textures\enemies-custom-5.png
