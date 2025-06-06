@@ -15,6 +15,7 @@ height	768
 5	resources\scene0005.txt
 6	resources\Mario1-1.txt
 7	resources\scene_testing.txt
+8	resources\Mario1-1_hidden.txt
 
 # id	file 
 [TEXTURES]

@@ -1,0 +1,107 @@
+# list of object assets to load in this scene
+[ASSETS]
+resources\mario.txt
+resources\brick.txt
+resources\coin.txt
+resources\goomba.txt
+resources\cloud.txt
+resources\koopas.txt
+resources\box.txt
+resources\ground.txt
+resources\pipe.txt
+resources\bush.txt
+resources\cloudcute.txt
+resources\block.txt
+resources\levelup.txt
+resources\wood.txt
+
+#
+[OBJECTS]
+# type	x	y	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block, 12 Mushroom, 13 Leaf, 15 Wood, 16 Para Koopas, 17 Para Goomba
+# See OBJECT_TYPE constants in AssetIDs.h
+
+
+# BRICKS
+#1	0	0
+#1	224	160
+
+# WOOD
+#15	224	160
+
+#15	0	0
+
+#COIN
+4	112	64
+4	112	128
+
+4	128	48
+4	128	96
+4	128	144
+
+4	144	48
+4	144	96
+4	144	144
+
+4	160	64
+4	160	80
+4	160	112
+4	160	128
+
+#Box	0 white	1 green	2 pink	3 blue 
+
+#Platform
+
+
+#Pipe
+
+6	2320	144	2	0
+
+#Ground
+8	0	176	39	1	16	16
+8	160	160	10	1	16	16
+8	176	144	9	1	16	16
+8	192	128	8	1	16	16
+8	208	112	7	1	16	16
+8	224	96	6	1	16	16
+8	240	80	5	1	16	16
+
+
+8	0	0	2	11	16	16
+8	288	0	8	11	16	16
+
+#Bush
+#Small Bush
+
+#Big Bush
+
+
+
+#CloudCute
+
+#Block
+
+
+#Wood
+
+#Portal 
+50	272	16	6
+
+# MARIO
+0	40	50
+
+#Goomba
+
+
+#Para Goomba
+
+#Koopas
+
+
+#Para Koopas
+
+
+[BOUNDARIES]
+# Main map boundary: type(0=main), left, top, right, bottom (in grid units)
+0	0	-15	200	15
+
