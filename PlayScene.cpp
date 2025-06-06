@@ -40,6 +40,9 @@
 // include ParaKoopas.h
 #include "ParaKoopas.h"
 
+// include ParaGoomba.h
+#include "ParaGoomba.h"
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -149,6 +152,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
+
+	case OBJECT_TYPE_PARA_GOOMBA: obj = new CParaGoomba(x, y); break;
+
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 
 	case OBJECT_TYPE_WOOD: obj = new CWood(x, y); break;

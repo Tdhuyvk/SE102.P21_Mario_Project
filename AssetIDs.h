@@ -48,7 +48,7 @@
 #define OBJECT_TYPE_PARA_KOOPAS 16
 
 // define para goomba
-#define OBJECT_TYPE_PARA_GOMBA 17
+#define OBJECT_TYPE_PARA_GOOMBA 17
 
 // grid as unit
 #define GRID_SIZE 16

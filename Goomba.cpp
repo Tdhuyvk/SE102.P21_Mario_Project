@@ -49,6 +49,7 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 )
 	{
 		vy = 0;
+		isOnPlatform = true;
 	}
 	else if (e->nx != 0)
 	{

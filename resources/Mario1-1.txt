@@ -334,13 +334,15 @@ resources\wood.txt
 0	20	120
 
 #Goomba
-2	320	144
+#2	320	144
 
 2	608	144
 
 2	836	128
 2	880	128
 
+#Para Goomba
+17	320	144
 
 #Koopas
 3	576	128	1
