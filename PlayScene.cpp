@@ -507,7 +507,7 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+			coObjects.push_back(objects[i]);
 	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -582,4 +582,14 @@ void CPlayScene::PurgeDeletedObjects()
 	objects.erase(
 		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
 		objects.end());
+}
+
+bool CPlayScene::IsFallOff(float y)
+{
+	// Check object fall off screen
+	float cam_x, cam_y;
+	CGame* game = CGame::GetInstance();
+	game->GetCamPos(cam_x, cam_y);
+
+	return y > cam_y + game->GetBackBufferHeight() + 50; // Add 50 pixel below screen
 }

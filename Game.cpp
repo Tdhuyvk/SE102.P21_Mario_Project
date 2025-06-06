@@ -559,3 +559,44 @@ CGame* CGame::GetInstance()
 	return __instance;
 }
 
+/*
+	New Camera method
+*/
+
+// Check if object inside camera view
+bool CGame::IsInCamera(float obj_x, float obj_y, float width, float height)
+{
+	float cam_x, cam_y;
+	GetCamPos(cam_x, cam_y);
+
+	return (obj_x + width > cam_x && obj_x < cam_x + backBufferWidth &&
+		obj_y + height > cam_y && obj_y < cam_y + backBufferHeight);
+}
+
+// Check if camera moving to object area
+bool CGame::IsCamEnter(float obj_x, float obj_y, float width, float height)
+{
+	float cam_x, cam_y;
+	GetCamPos(cam_x, cam_y);
+
+	return (obj_x < cam_x + backBufferWidth + width * 2 &&
+		obj_x + width > cam_x - width * 2 &&
+		obj_y < cam_y + backBufferHeight + height * 2 &&
+		obj_y + height > cam_y - height * 2);
+}
+
+// Check camera left side
+bool CGame::IsLeftSideOfCam(float obj_x)
+{
+	float cam_x, cam_y;
+	GetCamPos(cam_x, cam_y);
+	return obj_x < cam_x;
+}
+
+// Check camera right side
+bool CGame::IsRightSideOfCam(float obj_x)
+{
+	float cam_x, cam_y;
+	GetCamPos(cam_x, cam_y);
+	return obj_x > cam_x + backBufferWidth;
+}

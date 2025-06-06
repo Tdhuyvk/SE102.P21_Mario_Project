@@ -1,3 +1,6 @@
+#include "Game.h"
+#include "Playscene.h"
+#include "GameObject.h"
 #include "Goomba.h"
 
 CGoomba::CGoomba(float x, float y):CGameObject(x, y)
@@ -5,6 +8,12 @@ CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
 	die_start = -1;
+
+	//
+	SetDefaultPosition(x, y);
+	isActived = false;
+	trigger = TRIGGER_READY;
+
 	SetState(GOOMBA_STATE_WALKING);
 }
 
@@ -49,6 +58,45 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	CGame* game = CGame::GetInstance();
+	CPlayScene* scene = (CPlayScene*)game->GetCurrentScene();
+
+	// Check fall off
+	if (scene->IsFallOff(y))
+	{
+		//Reset();
+		return;
+	}
+
+	// active based of cam
+	if (!game->IsCamEnter(def_x, def_y)) {
+		if (!isActived)
+		{
+			trigger = TRIGGER_READY;
+			// set moving direction based of cam
+			if (game->IsRightSideOfCam(def_x))
+				vx = -GOOMBA_WALKING_SPEED;
+			else
+				vx = GOOMBA_WALKING_SPEED;
+		}
+	}
+
+	else if (trigger == TRIGGER_READY)
+	{
+		trigger = TRIGGER_ACTIVE;
+	}
+
+	// active enemy
+	if (!isActived && trigger == TRIGGER_ACTIVE)
+	{
+		isActived = true;
+		trigger = TRIGGER_IGNORE;
+	}
+
+	// skip update
+	if (!isActived || state == GOOMBA_STATE_DIE) return;
+
+	//
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -65,6 +113,9 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CGoomba::Render()
 {
+	// skip render when not active
+	if (!isActived) return;
+
 	int aniId = ID_ANI_GOOMBA_WALKING;
 	if (state == GOOMBA_STATE_DIE) 
 	{
@@ -91,4 +142,10 @@ void CGoomba::SetState(int state)
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
 	}
+}
+
+int CGoomba::IsCollidable()
+{
+	// only when actived
+	return isActived && (state != GOOMBA_STATE_DIE);
 }

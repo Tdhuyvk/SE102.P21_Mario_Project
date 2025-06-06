@@ -15,6 +15,27 @@ CGameObject::CGameObject()
 	nx = 1;	
 	state = -1;
 	isDeleted = false;
+
+	// new value
+	def_x = def_y = 0;
+	isActived = false;
+	trigger = TRIGGER_READY;
+}
+
+CGameObject::CGameObject(float x, float y)
+{
+	this->x = x;
+	this->y = y;
+	vx = vy = 0;
+	nx = 1;
+	state = -1;
+	isDeleted = false;
+
+	// set default
+	def_x = x;
+	def_y = y;
+	isActived = false;
+	trigger = TRIGGER_READY;
 }
 
 void CGameObject::RenderBoundingBox()

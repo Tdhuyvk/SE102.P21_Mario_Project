@@ -279,6 +279,8 @@ resources\wood.txt
 #Goomba
 #2	224	144
 
+2	324	144
+
 #2	992	0
 #2	1024	0
 #2	1056	0
@@ -288,7 +290,7 @@ resources\wood.txt
 3	592	48	1
 
 #Para Koopas
-16	200	144	3
+#16	200	144	3
 
 [BOUNDARIES]
 # Main map boundary: type(0=main), left, top, right, bottom (in grid units)

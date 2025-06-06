@@ -120,6 +120,12 @@ public:
 
 	void _ParseSection_TEXTURES(string line);
 
+	// new method for camera
+	bool IsInCamera(float obj_x, float obj_y, float width = 16.0f, float height = 16.0f);
+	bool IsCamEnter(float obj_x, float obj_y, float width = 16.0f, float height = 16.0f);
+	bool IsLeftSideOfCam(float obj_x);
+	bool IsRightSideOfCam(float obj_x);
+
 
 	~CGame();
 };

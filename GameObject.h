@@ -14,6 +14,16 @@ using namespace std;
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
 #define BBOX_ALPHA 0.25f		// Bounding box transparency
 
+// define active states
+#define OBJECT_STATE_INACTIVE 0
+#define OBJECT_STATE_ACTIVE   1
+
+// define trigger state
+#define TRIGGER_IGNORE -1
+#define TRIGGER_READY   0
+#define TRIGGER_ACTIVE  1
+
+
 class CGameObject
 {
 protected:
@@ -28,9 +38,37 @@ protected:
 
 	int state;
 
-	bool isDeleted; 
+	bool isDeleted;
+
+	float def_x, def_y;       // default position
+	int trigger;              // active state (TRIGGER_IGNORE, TRIGGER_READY, TRIGGER_ACTIVE)
+	bool isActived;           // actived
 
 public: 
+
+	// 
+    void SetDefaultPosition(float x, float y) { def_x = x; def_y = y; }
+    float GetDefaultX() { return def_x; }
+    float GetDefaultY() { return def_y; }
+    
+    bool IsActivated() const { return isActived; }
+    void SetActivationState(bool state) { isActived = state; }
+    
+    int GetTriggerState() const { return trigger; }
+    void SetTriggerState(int state) { trigger = state; }
+    
+    // check reset if needed
+    virtual bool NeedReset(float fallY) { return false; }
+    
+    // reset to default position
+    virtual void Reset() 
+    { 
+        x = def_x; 
+        y = def_y; 
+        isActived = false; 
+        trigger = TRIGGER_READY; 
+    }
+
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
@@ -48,8 +86,9 @@ public:
 	void RenderBoundingBox();
 
 	CGameObject();
-	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }
+	/*CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }*/
 
+	CGameObject(float x, float y);
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {};

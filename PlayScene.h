@@ -78,6 +78,9 @@ public:
 
 	// add object
 	void AddObject(LPGAMEOBJECT obj) { objects.push_back(obj); }
+
+	// fall off
+	bool IsFallOff(float y);
 };
 
 typedef CPlayScene* LPPLAYSCENE;
