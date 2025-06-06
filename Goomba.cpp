@@ -94,8 +94,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		trigger = TRIGGER_IGNORE;
 	}
 
-	// skip update
-	if (!isActived || state == GOOMBA_STATE_DIE) return;
 
 	//
 	vy += ay * dt;
@@ -106,6 +104,9 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isDeleted = true;
 		return;
 	}
+
+	// skip update
+	if (!isActived || state == GOOMBA_STATE_DIE) return;
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
