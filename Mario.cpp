@@ -186,6 +186,10 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	{
 		brick->SetState(BRICK_STATE_BROKEN);
 	}
+
+	if ((e->ny > 0 && level == MARIO_LEVEL_RACCOON) || (e->ny > 0 && level == MARIO_LEVEL_BIG)) {
+		brick->SetState(BRICK_STATE_BROKEN);
+	}
 }
 
 void CMario::OnCollisionWithBlock(LPCOLLISIONEVENT e)
