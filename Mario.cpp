@@ -285,18 +285,18 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 		else if (koopa->GetState() == KOOPAS_STATE_DIE) // Stationary shell
 		{
-			//// Check if running button is held
-			//if (isHolding)
-			//{
-			//	// Pickup and hold the shell
-			//	HoldKoopas(koopa);
-			//}
-			//else
-			//{
-			//	// Kick the shell
-			//	koopa->SetNx(this->nx); // Set direction based on Mario's direction
-			//	koopa->SetState(KOOPAS_STATE_SHELL_MOVING);
-			//}
+			// Check if running button is held
+			if (isHolding)
+			{
+				// Pickup and hold the shell
+				HoldKoopas(koopa);
+			}
+			else
+			{
+				// Kick the shell
+				koopa->SetNx(this->nx); // Set direction based on Mario's direction
+				koopa->SetState(KOOPAS_STATE_SHELL_MOVING);
+			}
 
 			if (isTailAttacking && level == MARIO_LEVEL_RACCOON)
 			{
