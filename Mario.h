@@ -232,6 +232,9 @@ class CMario : public CGameObject
 	// collision with Block
 	void OnCollisionWithBlock(LPCOLLISIONEVENT e);
 
+	// collision with Brick
+	void OnCollisionWithBrick(LPCOLLISIONEVENT e);
+
 	int GetAniIdBig();
 	int GetAniIdSmall();
 

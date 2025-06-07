@@ -24,6 +24,9 @@
 // include Block.h
 #include "Block.h"
 
+// include Brick.h
+#include "Brick.h"
+
 // include ParaKoopas.h
 #include "ParaKoopas.h"
 
@@ -132,6 +135,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithSuperLeaf(e);
 	else if (dynamic_cast<CBlock*>(e->obj)) // collision with block
 		OnCollisionWithBlock(e);
+	else if (dynamic_cast<CBrick*>(e->obj)) // collision with brick
+		OnCollisionWithBrick(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -170,6 +175,16 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 				}
 			}
 		}
+	}
+}
+
+void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
+{
+	CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+
+	if (isTailAttacking && level == MARIO_LEVEL_RACCOON)
+	{
+		brick->SetState(BRICK_STATE_BROKEN);
 	}
 }
 
