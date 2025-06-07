@@ -81,6 +81,8 @@ public:
 
 	// fall off
 	bool IsFallOff(float y);
+
+	void SpawnObject(LPGAMEOBJECT obj);
 };
 
 typedef CPlayScene* LPPLAYSCENE;

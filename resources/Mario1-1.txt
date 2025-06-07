@@ -18,7 +18,7 @@ resources\wood.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block, 12 Mushroom, 13 Leaf, 15 Wood, 16 Para Koopas, 17 Para Goomba
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Coin, 5 = Platform, 6 = Pipe, 7 = Box, 8 = Ground, 9 Bush, 10 CloudCute, 11 Block, 12 Mushroom, 13 Leaf, 14 Piranha, 15 Wood, 16 Para Koopas, 17 Para Goomba
 # See OBJECT_TYPE constants in AssetIDs.h
 
 
@@ -327,6 +327,37 @@ resources\wood.txt
 15	2256	128
 15	2272	128
 
+#Brick
+1	1952	160
+
+1	1968	144
+1	1968	160
+
+1	1984	128
+1	1984	144
+1	1984	160
+
+1	2000	128
+1	2000	144
+1	2000	160
+
+1	2016	128
+1	2016	144
+1	2016	160
+
+1	2032	128
+1	2032	144
+1	2032	160
+
+1	2048	160
+
+
+1	2096	144
+1	2096	160
+
+1	2112	160
+
+
 #Portal 
 50	2272	160	8
 
@@ -347,9 +378,7 @@ resources\wood.txt
 #Koopas
 3	576	128	1
 
-#3	1328	48	3
-#3	1360	48	3
-#3	1392	48	3
+3	2096	128	1
 
 3	1472	144	2
 
@@ -358,6 +387,9 @@ resources\wood.txt
 16	1328	48	3
 16	1360	48	3
 16	1392	48	3
+
+#Piranha
+#14	30	30	3
 
 [BOUNDARIES]
 # Main map boundary: type(0=main), left, top, right, bottom (in grid units)

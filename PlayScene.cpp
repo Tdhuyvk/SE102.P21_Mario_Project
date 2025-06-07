@@ -43,6 +43,9 @@
 // include ParaGoomba.h
 #include "ParaGoomba.h"
 
+// include VenusPiranha.h
+#include "VenusPiranha.h"
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -314,6 +317,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = new CMushroom(x, y);
+		break;
+	}
+
+	case OBJECT_TYPE_PIRANHA:
+	{
+		if (tokens.size() < 4)
+		{
+			DebugOut(L"[ERROR] Piranha object format invalid!\n");
+			return;
+		}
+
+		int Piranhatype;
+		float x = (float)atof(tokens[1].c_str());
+		float y = (float)atof(tokens[2].c_str());
+		Piranhatype = atoi(tokens[3].c_str());
+
+		obj = new CVenusPiranha(x, y, Piranhatype);
 		break;
 	}
 
@@ -603,4 +623,9 @@ bool CPlayScene::IsFallOff(float y)
 	game->GetCamPos(cam_x, cam_y);
 
 	return y > cam_y + game->GetBackBufferHeight() + 50; // Add 50 pixel below screen
+}
+
+void CPlayScene::SpawnObject(LPGAMEOBJECT obj)
+{
+	objects.push_back(obj);
 }
